@@ -1,0 +1,12 @@
+mat-toolbar {
+
+  .spacer {
+    flex: 1 1 auto;
+  }
+
+  .status-container {
+    padding: 0;
+    height: 2px;
+    overflow: hidden;
+  }
+}

@@ -1,0 +1,14 @@
+<p>Login into Last.fm account</p>
+<!--<button mat-raised-button>-->
+<!--<a mat-raised-button href="{{loginUrl}}">Login</a>-->
+<!--</button>-->
+<ng-container *ngIf="userInfo$ | async as userInfo; else errorTemplate">
+  <p class="user-name">{{userInfo.name}}</p>
+  <img class="user-image" [src]="userInfo.image" alt="Avatar">
+</ng-container>
+
+<ng-template #errorTemplate>
+  <ng-container *ngIf="error">
+    <p>Error: {{error}}</p>
+  </ng-container>
+</ng-template>

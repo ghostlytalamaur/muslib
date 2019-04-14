@@ -1,0 +1,12 @@
+<mat-toolbar>
+  <mat-toolbar-row class="status-container">
+    <ng-container *ngIf="statusService.isRunning$ | async">
+      <mat-progress-bar [mode]="'indeterminate'"></mat-progress-bar>
+    </ng-container>
+  </mat-toolbar-row>
+  <mat-toolbar-row>
+    <a mat-button routerLink="artists" routerLinkActive="active">Artists</a>
+    <div class="spacer"></div>
+    <a mat-button routerLink="profile" routerLinkActive="active">{{user.login}}</a>
+  </mat-toolbar-row>
+</mat-toolbar>
