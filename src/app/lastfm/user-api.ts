@@ -7,6 +7,7 @@ import {ImageResponse, TopArtistsResponse, UserInfoResponse} from './last-fm-res
 import {UserInfo} from './models/user-info';
 import {Artist} from './models/artist';
 import {TopArtists} from './models/top-artists';
+import {of} from 'rxjs/internal/observable/of';
 
 
 export interface UserTopArtistParams {
@@ -56,17 +57,17 @@ export class UserApi {
   }
 
   getTopArtists(user: User, params?: UserTopArtistParams): Observable<TopArtists> {
-    const httpParams = this.buildParams(user)
+    let httpParams = this.buildParams(user)
       .append('method', 'user.getTopArtists');
     if (params) {
       if (params.limit) {
-        httpParams.append('limit', String(params.limit));
+        httpParams = httpParams.append('limit', String(params.limit));
       }
       if (params.page) {
-        httpParams.append('page', String(params.page));
+        httpParams = httpParams.append('page', String(params.page));
       }
       if (params.period) {
-        httpParams.append('period', String(params.period));
+        httpParams = httpParams.append('period', String(params.period));
       }
     }
     return this.getRequest<TopArtistsResponse, TopArtists>(httpParams, this.buildTopArtists);
@@ -83,9 +84,9 @@ export class UserApi {
     }
   }
 
-  private extractImage(images: ImageResponse[]): string {
+  private extractImage(images: ImageResponse[]): Observable<string> {
     const img = images.find((value) => value.size === 'extralarge');
-    return img ? img['#text'] : '';
+    return of(img ? img['#text'] : '');
   }
 
   private buildTopArtists(response: TopArtistsResponse): TopArtists {
@@ -94,12 +95,12 @@ export class UserApi {
       response.topartists['@attr'].page,
       response.topartists['@attr'].total,
       response.topartists.artist.map(artistResponse =>
-        new Artist(artistResponse.mbid, artistResponse.name, artistResponse.url, this.extractImage(artistResponse.image)))
+        new Artist(artistResponse.mbid, artistResponse.name, this.extractImage(artistResponse.image)))
     );
   }
 
   private buildUserInfo(response: UserInfoResponse): UserInfo {
-    return new UserInfo(response.user.name, response.user.url, this.extractImage(response.user.image));
+    return new UserInfo(response.user.name, response.user.url, ''); //this.extractImage(response.user.image));
   }
 }
 

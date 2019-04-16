@@ -1,20 +1,32 @@
 @import "~@angular/material/theming";
 
+$card_width: 300px;
+$title_width: $card_width - 36px - 16px;
 .mat-card {
   @include mat-elevation-transition();
   @include mat-elevation(8);
 
   margin: 8px;
-
+  width: $card_width;
+  box-sizing: border-box;
   transition: all .2s ease-in-out;
 
   &:hover {
     @include mat-elevation(12);
-    transform: scale(1.05);
+    transform: scale(1.02);
   }
 
+
+    .title-text {
+      width: $title_width;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+
+
   img {
-    width: 250px;
-    height: 250px;
+    width: $card_width;
+    height: $card_width;
   }
 }

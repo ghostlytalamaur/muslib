@@ -14,6 +14,10 @@ import {User} from './lastfm/user';
 import {HTTP_INTERCEPTORS} from '@angular/common/http';
 import {StatusInterceptor} from './http-interceptors/status-interceptor';
 import {StatusService} from './services/status.service';
+import {environment} from '../environments/environment';
+import {AngularFireModule} from '@angular/fire';
+import {AngularFirestoreModule} from '@angular/fire/firestore';
+import {AngularFireStorageModule} from '@angular/fire/storage';
 
 
 const defUser = new User('GhostlyTalamaur');
@@ -29,6 +33,11 @@ const defUser = new User('GhostlyTalamaur');
     BrowserModule,
     MatButtonModule,
     MatToolbarModule,
+
+    AngularFireModule.initializeApp(environment.firebase),
+    AngularFirestoreModule,
+    AngularFireStorageModule,
+
     LastFmModule,
     ArtistsLibraryModule,
     AppRoutingModule,

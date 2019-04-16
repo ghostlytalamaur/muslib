@@ -1,0 +1,10 @@
+<ng-container *ngIf="artists$ | async as artists">
+  <div class="artists-library">
+    <div class="artists-container">
+      <app-artist-card *ngFor="let artist of artists"
+                       [artist]="artist"
+                       (onDeleteArtist)="deleteArtist($event)"
+      ></app-artist-card>
+    </div>
+  </div>
+</ng-container>

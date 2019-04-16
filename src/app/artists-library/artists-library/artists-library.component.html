@@ -1,7 +1,2 @@
-<div *ngIf="topArtists" class="artists-cards-container">
-  <app-artist-card *ngFor="let artist of topArtists.artists"
-                   [artist]="artist"></app-artist-card>
-<!--  <ul>-->
-<!--    <li *ngFor="let artist of topArtists.artists">{{artist.name}}</li>-->
-<!--  </ul>-->
-</div>
+<a mat-button routerLink="./new">New artist</a>
+<router-outlet></router-outlet>

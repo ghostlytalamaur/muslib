@@ -1,0 +1,17 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <mat-form-field>
+    <input matInput type="text" placeholder="Artist"
+           formControlName="name">
+  </mat-form-field>
+<!--  <mat-form-field>-->
+    <input type="file" accept="image/png, image/jpeg, image/jpg"
+           placeholder="Image url"
+           (change)="onFileSelected($event)"
+    >
+<!--  </mat-form-field>-->
+
+  <div class="actions">
+    <button mat-button type="submit" [disabled]="!form.valid">Submit</button>
+    <button mat-button type="button" routerLink="../">Cancel</button>
+  </div>
+</form>

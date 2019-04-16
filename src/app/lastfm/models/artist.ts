@@ -1,9 +1,18 @@
+import {Observable} from 'rxjs';
+import {publishReplay, refCount} from 'rxjs/operators';
+
 export class Artist {
+
+  readonly image$: Observable<string>;
+
   constructor(
-    readonly mbid: string,
+    readonly id: string,
     readonly name: string,
-    readonly url: string,
-    readonly image: string
+    image: Observable<string>
   ) {
+    this.image$ = image.pipe(
+      publishReplay(1),
+      refCount()
+    );
   }
 }

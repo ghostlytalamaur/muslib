@@ -5,7 +5,7 @@ import {ProfileComponent} from './profile/profile.component';
 
 const routes: Routes = [
   {path: 'profile', component: ProfileComponent},
-  {path: '', redirectTo: 'artists', pathMatch: 'full'},
+  {path: '', redirectTo: 'library', pathMatch: 'full'},
   {path: '**', component: PageNotFoundComponent}
 ];
 
