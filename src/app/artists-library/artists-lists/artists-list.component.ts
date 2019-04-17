@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Observable} from 'rxjs';
 import {Artist} from '../../lastfm/models/artist';
 import {ArtistsService} from '../artists.service';
@@ -22,5 +22,9 @@ export class ArtistsListComponent implements OnInit {
 
   deleteArtist(id: string) {
     this.service.deleteArtist(id);
+  }
+
+  trackById(index: number, artist: Artist): string {
+    return artist.id;
   }
 }

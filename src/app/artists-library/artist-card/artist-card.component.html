@@ -6,9 +6,12 @@
         </div>
     </mat-card-title>
   </mat-card-header>
-  <img mat-card-image [src]="artist.image$ | async" alt="">
+  <div class="artist-image-container" mat-card-image>
+    <ng-container *ngIf="artist.image$ | async as image">
+      <img [src]="image" alt="">
+    </ng-container>
+  </div>
   <mat-card-content>
-    <p>Albums</p>
     <ul>
       <li *ngFor="let album of (albums$ | async)">{{album.date}} {{album.title}}</li>
     </ul>

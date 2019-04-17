@@ -8,7 +8,8 @@ import {
   MatInputModule,
   MatMenuModule,
   MatPaginatorModule,
-  MatProgressSpinnerModule
+  MatProgressSpinnerModule,
+  MatToolbarModule
 } from '@angular/material';
 import {ArtistCardComponent} from './artist-card/artist-card.component';
 import {ArtistEditComponent} from './artist-edit/artist-edit.component';
@@ -34,7 +35,8 @@ import {SharedModule} from '../shared/shared.module';
     FormsModule,
     ReactiveFormsModule,
     MatMenuModule,
-    SharedModule
+    SharedModule,
+    MatToolbarModule
   ]
 })
 export class ArtistsLibraryModule { }

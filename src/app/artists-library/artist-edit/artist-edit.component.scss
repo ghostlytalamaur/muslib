@@ -1,0 +1,45 @@
+@import "~@angular/material/theming";
+@import "~src/styles/variables";
+
+form {
+  $image-size: 300px;
+
+  display: grid;
+  grid-column-gap: 16px;
+  grid-row-gap: 8px;
+  justify-items: stretch;
+  grid-template-columns: 50fr $image-size minmax($image-size, 100fr) 50fr;
+  grid-template-rows: 1fr auto;
+  grid-template-areas: ". img fields  ." ". ... actions .";
+
+  .actions {
+    grid-area: actions;
+    justify-self: end;
+  }
+
+  .fields {
+    grid-column: 3 / 4;
+
+    display: flex;
+    flex-direction: column;
+  }
+
+  .image-selector {
+    grid-column: 2 / 3;
+
+    box-sizing: border-box;
+    width: $image-size;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+
+    .image-preview {
+      margin-bottom: 8px;
+      width: $image-size;
+      height: 300px;
+
+      font-size: 24px;
+      text-align: center;
+    }
+  }
+}

@@ -11,8 +11,6 @@ import {ArtistsService} from '../artists.service';
 })
 export class ArtistsLibraryComponent implements OnInit {
 
-
-
   constructor(
   ) {}
 

@@ -20,7 +20,7 @@ export class ArtistsService {
   }
 
   private static getImageId(id: string) {
-    return ARTISTS_COLLECTION + '/' + id;
+    return `${ARTISTS_COLLECTION}/${id}/${id}_main`;
   }
 
   getArtists(): Observable<Artist[]> {
@@ -41,23 +41,15 @@ export class ArtistsService {
   }
 
   deleteArtist(docId: string): Promise<void> {
-    return this.fireStore.collection<Artist>(ARTISTS_COLLECTION).doc(docId).delete()
-      .then(
-        () => this.storage.ref(ArtistsService.getImageId(docId))
-          .delete()
-          .toPromise()
-          .catch(() => Promise.resolve())
-      );
+    return this.fireStore.collection<Artist>(ARTISTS_COLLECTION).doc(docId).delete();
   }
 
   addArtist(name: string, image?: File): Promise<string> {
     const docId = this.fireStore.createId();
     return this.uploadImage(docId, image)
       .then(
-        (imagePath) => {
-          console.log('[ArtistsService] imagePath:', imagePath);
+        () => {
           const docRef = this.fireStore.collection<Artist>(ARTISTS_COLLECTION).doc(docId);
-
           return docRef.set({name})
             .then(() => Promise.resolve(docId));
         }

@@ -1,9 +1,9 @@
 <ng-container *ngIf="artists$ | async as artists">
   <div class="artists-library">
     <div class="artists-container">
-      <app-artist-card *ngFor="let artist of artists"
+      <app-artist-card (deleteArtist)="deleteArtist($event)"
                        [artist]="artist"
-                       (onDeleteArtist)="deleteArtist($event)"
+                       *ngFor="let artist of artists; trackBy: trackById"
       ></app-artist-card>
     </div>
   </div>
