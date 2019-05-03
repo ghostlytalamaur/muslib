@@ -1,11 +1,11 @@
 import {HttpClient, HttpErrorResponse, HttpParams} from '@angular/common/http';
 import {LastFmConfig} from './last-fm-config';
 import {Observable, throwError} from 'rxjs';
-import {catchError, map, publishReplay, refCount, shareReplay} from 'rxjs/operators';
-import {User} from './user';
+import {catchError, map, publishReplay, refCount} from 'rxjs/operators';
+import {User} from '../auth/user';
 import {ImageResponse, TopArtistsResponse, UserInfoResponse} from './last-fm-response';
 import {UserInfo} from './models/user-info';
-import {Artist} from './models/artist';
+import {Artist} from '../models/artist';
 import {TopArtists} from './models/top-artists';
 import {of} from 'rxjs/internal/observable/of';
 
@@ -33,7 +33,7 @@ export class UserApi {
       .append('format', 'json');
     if (user) {
       console.log('[UserApi] buildParams for user', user);
-      params = params.append('user', user.login);
+      params = params.append('user', user.displayName);
     }
 
     return params;
@@ -100,7 +100,7 @@ export class UserApi {
   }
 
   private buildUserInfo(response: UserInfoResponse): UserInfo {
-    return new UserInfo(response.user.name, response.user.url, ''); //this.extractImage(response.user.image));
+    return new UserInfo(response.user.name, response.user.url, ''); // this.extractImage(response.user.imageFile));
   }
 }
 

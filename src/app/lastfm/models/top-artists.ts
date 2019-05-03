@@ -1,4 +1,4 @@
-import {Artist} from './artist';
+import {Artist} from '../../models/artist';
 
 export class TopArtists {
   constructor(

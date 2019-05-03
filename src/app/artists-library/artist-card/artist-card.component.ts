@@ -1,7 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Artist} from '../../lastfm/models/artist';
-import {Observable} from 'rxjs';
-import {Album} from '../../musicbrainz/models/album';
+import {Artist} from '../../models/artist';
 
 @Component({
   selector: 'app-artist-card',
@@ -16,15 +14,13 @@ export class ArtistCardComponent implements OnInit {
   @Output()
   deleteArtist: EventEmitter<string> = new EventEmitter<string>();
 
-  albums$: Observable<Album[]>;
-
   constructor() {
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
   }
 
-  onDelete() {
+  onDelete(): void {
     this.deleteArtist.emit(this.artist.id);
   }
 }

@@ -1,17 +1,13 @@
 <form [formGroup]="form" (ngSubmit)="onSubmit()">
 
-  <div class="image-selector col-2">
-    <img [src]="imagePreview" alt="Artist image" class="image-preview">
-    <input type="file" accept="image/png, image/jpeg, image/jpg"
-           placeholder="Image url"
-           (change)="onFileSelected($event)"
-    >
-  </div>
+  <app-image-selector (imageSelected)="imageFile = $event" altText="Artist image"></app-image-selector>
 
   <div class="fields">
     <mat-form-field>
-      <input class="artist-input" formControlName="name" matInput placeholder="Artist"
-             type="text">
+      <label>
+        <input class="artist-input" formControlName="name" matInput placeholder="Artist"
+               type="text">
+      </label>
     </mat-form-field>
   </div>
   <div class="actions">

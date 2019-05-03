@@ -195,8 +195,6 @@ export class AppCtxMatMenuDirective implements AfterContentInit, OnDestroy {
 
   @HostListener('contextmenu', ['$event'])
   onHostContextMenu(event: MouseEvent) {
-    console.log('[Context Menu Trigger] onHostContextMenu()');
-
     event.preventDefault();
     this.toggleMenu(event);
     return false;
@@ -224,8 +222,6 @@ export class AppCtxMatMenuDirective implements AfterContentInit, OnDestroy {
 
   /** Opens the menu. */
   openMenu(pos?: Point): void {
-    console.log('[Context Menu Trigger] openMenu()');
-
     if (this._menuOpen) {
       return;
     }
@@ -553,7 +549,6 @@ export class AppCtxMatMenuDirective implements AfterContentInit, OnDestroy {
 
   /** Handles the cases where the user hovers over the trigger. */
   private _handleHover() {
-    console.log('[Context Menu Trigger] _handleHover');
     // Subscribe to changes in the hovered item in order to toggle the panel.
     if (!this.triggersSubmenu()) {
       return;

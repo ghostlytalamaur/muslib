@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {ArtistsService} from '../artists.service';
+import {ArtistsService} from '../services/artists.service';
 import {Router} from '@angular/router';
 
 interface FormValue {
@@ -16,8 +16,6 @@ export class ArtistEditComponent implements OnInit {
 
   form: FormGroup;
   private imageFile: File;
-  // base64
-  private imagePreview: string;
 
   constructor(
     private service: ArtistsService,
@@ -25,32 +23,20 @@ export class ArtistEditComponent implements OnInit {
   ) {
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.form = new FormGroup({
       name: new FormControl('', [Validators.required])
     });
   }
 
-  onSubmit() {
+  onSubmit(): void {
     const formValue: FormValue = this.form.value;
     this.service.addArtist(formValue.name, this.imageFile)
-      .catch(() => console.log(`Cannot add artist ${formValue.name}`));
+      .catch((e) => console.log(`Cannot add artist ${formValue.name}`, e));
     this.gotoParent();
   }
 
-  onFileSelected(event) {
-    if (!event || !event.target || !event.target.files) {
-      return;
-    }
-
-    this.imageFile = event.target.files[0];
-
-    const reader = new FileReader();
-    reader.onload = e => this.imagePreview = (e.target as FileReader).result as string;
-    reader.readAsDataURL(this.imageFile);
-  }
-
-  private gotoParent() {
+  private gotoParent(): void {
     this.router.navigate(['../'])
       .catch((err) => console.log('Cannot navigate to parent.', err));
   }

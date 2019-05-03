@@ -1,16 +1,19 @@
 import {NgModule} from '@angular/core';
 import {AppCtxMatMenuDirective} from './context-menu-trigger';
 import {MatMenuModule} from '@angular/material';
+import {ImageSelectorComponent} from './image-selector/image-selector.component';
 
 @NgModule({
   imports: [
     MatMenuModule
   ],
   exports: [
-    AppCtxMatMenuDirective
+    AppCtxMatMenuDirective,
+    ImageSelectorComponent
   ],
   declarations: [
-    AppCtxMatMenuDirective
+    AppCtxMatMenuDirective,
+    ImageSelectorComponent
   ]
 })
 export class SharedModule {}

@@ -1,0 +1,55 @@
+@import "~@angular/material/theming";
+@import "~src/styles/variables";
+
+.artist-details-container {
+  padding: 8px;
+
+
+  .artist-info-container {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    margin-bottom: 8px;
+
+    .artist-info-main {
+      display: flex;
+      flex-flow: column wrap;
+      justify-content: space-between;
+      flex-grow: 1;
+      padding: 8px;
+
+      h1 {
+        margin-top: 0;
+      }
+    }
+
+    img {
+      @include mat-elevation(4);
+
+      width: 300px;
+      height: 300px;
+    }
+  }
+
+  .albums-table {
+    width: 100%;
+
+    .mat-row {
+      &:hover {
+        background-color: mat-color($background, hover);
+      }
+    }
+
+    td {
+      img {
+        height: 48px;
+        width: 48px;
+      }
+    }
+  }
+
+  .albums-cards {
+    display: flex;
+    flex-flow: row wrap;
+  }
+}

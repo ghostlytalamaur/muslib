@@ -1,5 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-import {User} from '../lastfm/user';
+import {Component, OnInit} from '@angular/core';
 import {StatusService} from '../services/status.service';
 
 @Component({
@@ -10,11 +9,11 @@ import {StatusService} from '../services/status.service';
 export class AppNavBarComponent implements OnInit {
 
   constructor(
-    readonly user: User,
     readonly statusService: StatusService
-  ) { }
+  ) {
+  }
 
-  ngOnInit() {
+  ngOnInit(): void {
   }
 
 }

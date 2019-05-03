@@ -1,7 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {Observable} from 'rxjs';
-import {Artist} from '../../lastfm/models/artist';
-import {ArtistsService} from '../artists.service';
+import {Artist} from '../../models/artist';
+import {ArtistsService} from '../services/artists.service';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
   selector: 'app-artists-lists',
@@ -13,18 +14,27 @@ export class ArtistsListComponent implements OnInit {
   artists$: Observable<Artist[]>;
 
   constructor(
-    private service: ArtistsService
-  ) { }
+    private service: ArtistsService,
+    private route: ActivatedRoute,
+    private router: Router
+  ) {
+  }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.artists$ = this.service.getArtists();
   }
 
-  deleteArtist(id: string) {
-    this.service.deleteArtist(id);
+  deleteArtist(id: string): void {
+    this.service.deleteArtist(id)
+      .catch((err) => console.log('Cannot delete artist', err));
   }
 
   trackById(index: number, artist: Artist): string {
     return artist.id;
+  }
+
+  onClick(artist: Artist): void {
+    this.router.navigate([artist.id], {relativeTo: this.route})
+      .catch((err) => console.error('Cannot navigate to artist details.', err));
   }
 }

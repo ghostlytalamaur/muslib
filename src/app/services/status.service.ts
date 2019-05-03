@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {BehaviorSubject, Observable, Subject} from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
 
 @Injectable()
 export class StatusService {
@@ -9,7 +9,7 @@ export class StatusService {
   isRunning$: Observable<boolean> = this.isRunning.asObservable();
 
 
-  startOperation() {
+  startOperation(): void {
     this.operationCounter++;
     console.log('[StatusService] startOperation(); operationCounter = ', this.operationCounter);
     if (this.operationCounter === 1) {
@@ -17,7 +17,7 @@ export class StatusService {
     }
   }
 
-  endOperation() {
+  endOperation(): void {
     this.operationCounter--;
     console.log('[StatusService] endOperation(); operationCounter = ', this.operationCounter);
     if (this.operationCounter === 0) {
