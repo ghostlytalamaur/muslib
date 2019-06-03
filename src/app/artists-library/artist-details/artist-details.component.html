@@ -1,9 +1,11 @@
 <div class="artist-details-container">
   <ng-container *ngIf="artist$ | async as artist">
     <div class="artist-info-container">
-      <ng-container *ngIf="artist.image$ | async as imageUrl">
-        <img [src]="!!imageUrl ? imageUrl : ''">
-      </ng-container>
+      <div class="artist-image">
+        <ng-container *ngIf="artist.image$ | async as imageUrl">
+          <img [src]="!!imageUrl ? imageUrl : ''">
+        </ng-container>
+      </div>
 
       <div class="artist-info-main">
         <h1>{{artist.name}}</h1>

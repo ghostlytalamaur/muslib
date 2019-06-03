@@ -25,10 +25,6 @@ describe('NewAlbumDialogComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(NewAlbumDialogComponent);
     component = fixture.componentInstance;
-
-    const controls = fixture.debugElement.queryAll(By.css('input'));
-    console.log(controls.map(control => control.name));
-    console.log(controls);
     fixture.detectChanges();
   });
 

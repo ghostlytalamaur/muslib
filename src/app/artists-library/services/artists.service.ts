@@ -1,14 +1,13 @@
-import {Injectable} from '@angular/core';
-import {AngularFirestore} from '@angular/fire/firestore';
-import {Artist} from '../../models/artist';
-import {Observable} from 'rxjs';
-import {AngularFireStorage} from '@angular/fire/storage';
-import {map, publish, refCount} from 'rxjs/operators';
-import {AuthService} from '../../auth/auth.service';
-import {BaseService} from './base-library.service';
-import {Collections} from './constants';
-import {StatusService} from '../../services/status.service';
-import {testIterator} from '../samples/iterators';
+import { Injectable } from '@angular/core';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFireStorage } from '@angular/fire/storage';
+import { Observable } from 'rxjs';
+import { map, publish, refCount } from 'rxjs/operators';
+import { AuthService } from '../../auth/auth.service';
+import { Artist } from '../../models/artist';
+import { StatusService } from '../../services/status.service';
+import { BaseService } from './base-library.service';
+import { Collections } from './constants';
 
 interface FireArtist {
   name: string;
@@ -30,7 +29,6 @@ export class ArtistsService extends BaseService<FireArtist, Artist> {
   }
 
   getArtists(): Observable<Artist[]> {
-    testIterator();
     if (!this.artists$) {
       this.artists$ = this.getItems(Collections.ARTISTS, (id, data, image$) => new Artist(id, data.name, image$))
         .pipe(
@@ -63,6 +61,7 @@ export class ArtistsService extends BaseService<FireArtist, Artist> {
       );
   }
 
+// tslint:disable-next-line: typedef
   [Symbol.toStringTag]() {
     return 'Artist Service';
   }

@@ -22,6 +22,7 @@ import {ArtistDetailsComponent} from './artist-details/artist-details.component'
 import {AlbumListComponent} from './album-list/album-list.component';
 import {NewAlbumDialogComponent} from './new-album-dialog/new-album-dialog.component';
 import {AlbumCardComponent} from './album-card/album-card.component';
+import { NewArtistDialogComponent } from './new-artist-dialog/new-artist-dialog.component';
 
 @NgModule({
   declarations: [
@@ -32,10 +33,12 @@ import {AlbumCardComponent} from './album-card/album-card.component';
     ArtistDetailsComponent,
     AlbumListComponent,
     AlbumCardComponent,
-    NewAlbumDialogComponent
+    NewAlbumDialogComponent,
+    NewArtistDialogComponent
   ],
   entryComponents: [
-    NewAlbumDialogComponent
+    NewAlbumDialogComponent,
+    NewArtistDialogComponent
   ],
   imports: [
     CommonModule,

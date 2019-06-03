@@ -11,8 +11,8 @@ function isInputElement(eventTarget: any): eventTarget is HTMLInputElement {
 })
 export class ImageSelectorComponent implements OnInit {
 
-  @Input('image')
-  imagePreview = '';
+  @Input()
+  image = '';
 
   @Input()
   altText = 'Image';
@@ -23,17 +23,17 @@ export class ImageSelectorComponent implements OnInit {
   constructor() {
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
   }
 
-  onFileSelected(event: Event) {
+  onFileSelected(event: Event): void {
     if (!isInputElement(event.target) || event.target.files.length === 0) {
       return;
     }
 
     const image = event.target.files[0];
     const reader = new FileReader();
-    reader.onload = (e) => this.imagePreview = (e.target as FileReader).result as string;
+    reader.onload = (e) => this.image = (e.target as FileReader).result as string;
     reader.readAsDataURL(image);
     this.imageSelected.emit(image);
   }
