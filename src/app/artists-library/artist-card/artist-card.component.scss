@@ -29,9 +29,17 @@ $title_width: $card_width - 36px - 16px;
     width: $card_width;
     height: $card_width;
 
+    background-color: black;
+    
+    display: flex;
+    justify-content: center;
+    align-content: center;
+
     img {
+      max-width: $card_width;
+      max-height: $card_width;
+      align-self: center;
       width: 100%;
-      height: 100%;
     }
   }
 }

@@ -1,7 +1,7 @@
 @import "~@angular/material/theming";
 @import "variables";
 
-@include mat-core()
+@include mat-core();
 @include angular-material-theme($theme);
 
 html, body {

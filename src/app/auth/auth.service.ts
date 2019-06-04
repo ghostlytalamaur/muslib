@@ -23,7 +23,6 @@ export class AuthService {
       distinctUntilChanged((x, y) => x && y && x.uid === y.uid && x.displayName === y.displayName),
       map((u => {
         if (u) {
-          console.log('current user:', u);
           return new User(u.uid, u.displayName);
         } else {
           return null;
@@ -42,8 +41,7 @@ export class AuthService {
 
   login(): Promise<void> {
     return this.fireAuth.auth.signInWithPopup(new auth.GoogleAuthProvider())
-      .then((credential) => {
-        console.log(credential);
+      .then(() => {
         return Promise.resolve();
       });
   }
