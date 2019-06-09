@@ -1,0 +1,17 @@
+$image-size: 300px;
+.image-selector {
+  box-sizing: border-box;
+  width: $image-size;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+
+  .image-preview {
+    margin-bottom: 8px;
+    width: $image-size;
+    height: 300px;
+
+    font-size: 24px;
+    text-align: center;
+  }
+}

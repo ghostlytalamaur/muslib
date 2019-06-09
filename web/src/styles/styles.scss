@@ -1,0 +1,29 @@
+@import "~@angular/material/theming";
+@import "variables";
+
+@include mat-core();
+@include angular-material-theme($theme);
+
+html, body {
+  height: 100%;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+app-root {
+  display: flex;
+  flex-direction: column;
+
+  position: absolute;
+  top: 66px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}

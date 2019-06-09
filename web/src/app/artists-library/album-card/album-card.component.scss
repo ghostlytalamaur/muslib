@@ -1,0 +1,42 @@
+@import "~@angular/material/theming";
+
+$card_width: 300px;
+$title_width: $card_width - 36px - 16px;
+.mat-card {
+  @include mat-elevation-transition();
+  @include mat-elevation(8);
+
+  margin: 8px;
+  width: $card_width;
+  box-sizing: border-box;
+  transition: all .2s ease-in-out;
+
+  &:hover {
+    @include mat-elevation(12);
+    transform: scale(1.02);
+  }
+
+
+  .title-text {
+    width: $title_width;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+
+
+  .artist-image-container {
+    width: $card_width;
+    height: $card_width;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+
+    img {
+      max-width: $card_width;
+      max-height: $card_width;
+      align-self: center;
+      width: 100%;
+    }
+  }
+}

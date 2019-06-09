@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/../github/angular/angular.iml" filepath="$PROJECT_DIR$/../github/angular/angular.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../github/angularfire2/angularfire2.iml" filepath="$PROJECT_DIR$/../github/angularfire2/angularfire2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../github/material2/material2.iml" filepath="$PROJECT_DIR$/../github/material2/material2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/muslib.iml" filepath="$PROJECT_DIR$/.idea/muslib.iml" />
+    </modules>
+  </component>
+</project>

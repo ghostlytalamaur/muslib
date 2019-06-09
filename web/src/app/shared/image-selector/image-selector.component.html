@@ -1,0 +1,7 @@
+<div class="image-selector">
+  <img [src]="image" alt="{{altText}}" class="image-preview">
+  <input (change)="onFileSelected($event)" accept="image/png, image/jpeg, image/jpg"
+         placeholder="Image url"
+         type="file"
+  >
+</div>
