@@ -32,7 +32,7 @@ export class ArtistsService extends BaseService<FireArtist, Artist> {
 
   getArtists(): Observable<Artist[]> {
     if (!this.artists$) {
-      this.artists$ = this.getItems(Collections.ARTISTS, (id, data, image$) => new Artist(id, data.name, image$))
+      this.artists$ = this.getItems(Collections.ARTISTS, 300, (id, data, image$) => new Artist(id, data.name, image$))
         .pipe(
           publish(),
           refCount()
@@ -45,7 +45,7 @@ export class ArtistsService extends BaseService<FireArtist, Artist> {
     return this.deleteItem(Collections.ARTISTS, docId);
   }
 
-  addArtist(name: string, image?: File): Promise<string> {
+  addArtist(name: string, image?: File | string): Promise<string> {
     return this.addItem(Collections.ARTISTS, {name}, image);
   }
 

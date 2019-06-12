@@ -1,17 +1,37 @@
-$image-size: 300px;
 .image-selector {
-  box-sizing: border-box;
-  width: $image-size;
-  height: auto;
+  position: relative;
   display: flex;
   flex-direction: column;
+  align-content: center;
+  justify-content: center;
+  border: 1px dotted gray;
 
   .image-preview {
-    margin-bottom: 8px;
-    width: $image-size;
-    height: 300px;
-
     font-size: 24px;
     text-align: center;
+  }
+
+  .fileChooser {
+    display: none;
+  }
+
+  .info-text {
+    text-align: center;
+  }
+
+  .actions {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+  }
+
+  .select-button {
+    align-self: center;
+  }
+
+  .image-300-container {
+    &.drag * {
+      pointer-events: none;
+    }
   }
 }

@@ -1,8 +1,8 @@
-import {Component, OnInit} from '@angular/core';
-import {Observable} from 'rxjs';
-import {Router} from '@angular/router';
-import {AuthService} from '../auth.service';
-import {User} from '../user';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
+import { AuthService } from '../auth.service';
+import { User } from '../user';
 
 @Component({
   selector: 'app-auth',
@@ -29,4 +29,5 @@ export class ProfileComponent implements OnInit {
       .then(() => this.router.navigate(['login']))
       .catch(reason => console.log('Cannot sign out.', reason));
   }
+
 }

@@ -1,7 +1,29 @@
 <div class="image-selector">
-  <img [src]="image" alt="{{altText}}" class="image-preview">
-  <input (change)="onFileSelected($event)" accept="image/png, image/jpeg, image/jpg"
-         placeholder="Image url"
-         type="file"
-  >
+
+  <div class="image-300-container"
+    (dragover)="onDragOver($event)"
+    (dragenter)="onDragEnter($event)"
+    (dragleave)="onDragLeave($event)"
+    (drop)="onDrop($event)"
+    (mouseenter)="onMouseEnter($event)"
+    (mouseleave)="onMouseLeave($event)"
+    [ngClass]="currentClasses"
+    >
+
+    <ng-container *ngIf="image; else selectButton">
+      <img [src]="image" alt="{{altText}}" class="image-preview image-300">
+      <div *ngIf="mouseOver" class="actions">
+          <button mat-button type="button" (click)="clearImage(fileChooser)">X</button>
+        </div>
+    </ng-container>
+
+    <ng-template #selectButton>
+      <p *ngIf="getInfo() as info" class="info-text">{{info}}</p>
+      <button *ngIf="getInfoType() !== 'itStatus'"
+        mat-raised-button class="select-button" type="button" (click)="fileChooser.click($event)">Click to select image</button>
+    </ng-template>
+  </div>
+
+  <input (change)="onFileSelected($event)" accept="image/png, image/jpeg" placeholder="Image url" type="file"
+    #fileChooser class="fileChooser">
 </div>

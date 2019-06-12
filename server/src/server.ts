@@ -141,26 +141,35 @@ async function getUserId(req: express.Request): Promise<string> {
   }
 }
 
-function buildImagePath(userId: string, artistId: string, suffix: string): string {
-  return `users/${userId}/artists/${artistId}/${artistId}_${suffix}`;
+function buildImagePath(userId: string, path: string, suffix: string) {
+  return `users/${userId}/${path}_${suffix}`
 }
 
-app.post('/images/artists/:artistId', async (req, res, next) => {
-  console.log('Request parameters:', req.params);
+async function processUpload(req: express.Request, res: express.Response, path: string, sizes?: number[]): Promise<void> {
   try {
     const userId: string = await getUserId(req);
-    const artistId: string = req.params.artistId;
     const image: Buffer = await getImage(req);
     const promises: Promise<any>[] = [];
-    promises.push(uploadImage(buildImagePath(userId, req.params.artistId, 'main'), image));
-    const resized: Buffer = await resizeImage(image, 300);
-    promises.push(uploadImage(buildImagePath(userId, artistId, '300'), resized));
+    promises.push(uploadImage(buildImagePath(userId, path, 'main'), image));
+    for (let i = 0; i < sizes.length; i++) {
+      const resized: Buffer = await resizeImage(image, sizes[i]);
+      promises.push(uploadImage(buildImagePath(userId, path, sizes[i].toString()), resized));
+    }
     await Promise.all(promises);
     res.sendStatus(200);
   } catch (e) {
     console.log('Error while uploading image\n', e);
     res.sendStatus(500);
   }
+}
+
+app.post('/images/artists/:artistId', async (req, res, next) => {
+  console.log('Request uploading image');
+  await processUpload(req, res, `artists/${req.params.artistId}/${req.params.artistId}`, [300]);
+});
+
+app.post('/images/artists/:artistId/albums/:albumId', async (req, res, next) => {
+  await processUpload(req, res, `artists/${req.params.artistId}/albums/${req.params.albumId}/${req.params.albumId}`, [300, 96]);
 });
 
 app.listen(3000, () => {

@@ -132,26 +132,35 @@ function getUserId(req) {
         }
     });
 }
-function buildImagePath(userId, artistId, suffix) {
-    return `users/${userId}/artists/${artistId}/${artistId}_${suffix}`;
+function buildImagePath(userId, path, suffix) {
+    return `users/${userId}/${path}_${suffix}`;
+}
+function processUpload(req, res, path, sizes) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const userId = yield getUserId(req);
+            const image = yield getImage(req);
+            const promises = [];
+            promises.push(uploadImage(buildImagePath(userId, path, 'main'), image));
+            for (let i = 0; i < sizes.length; i++) {
+                const resized = yield resizeImage(image, sizes[i]);
+                promises.push(uploadImage(buildImagePath(userId, path, sizes[i].toString()), resized));
+            }
+            yield Promise.all(promises);
+            res.sendStatus(200);
+        }
+        catch (e) {
+            console.log('Error while uploading image\n', e);
+            res.sendStatus(500);
+        }
+    });
 }
 app.post('/images/artists/:artistId', (req, res, next) => __awaiter(this, void 0, void 0, function* () {
-    console.log('Request parameters:', req.params);
-    try {
-        const userId = yield getUserId(req);
-        const artistId = req.params.artistId;
-        const image = yield getImage(req);
-        const promises = [];
-        promises.push(uploadImage(buildImagePath(userId, req.params.artistId, 'main'), image));
-        const resized = yield resizeImage(image, 300);
-        promises.push(uploadImage(buildImagePath(userId, artistId, '300'), resized));
-        yield Promise.all(promises);
-        res.sendStatus(200);
-    }
-    catch (e) {
-        console.log('Error while uploading image\n', e);
-        res.sendStatus(500);
-    }
+    console.log('Request uploading image');
+    yield processUpload(req, res, `artists/${req.params.artistId}/${req.params.artistId}`, [300]);
+}));
+app.post('/images/artists/:artistId/albums/:albumId', (req, res, next) => __awaiter(this, void 0, void 0, function* () {
+    yield processUpload(req, res, `artists/${req.params.artistId}/albums/${req.params.albumId}/${req.params.albumId}`, [300, 96]);
 }));
 app.listen(3000, () => {
     console.log('Listening on port 3000.');

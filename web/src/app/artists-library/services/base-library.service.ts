@@ -21,11 +21,11 @@ export class BaseService<T, R> {
     return `users/${userId}/${path}/${docId}/${docId}_${size}`;
   }
 
-  protected async addItem(path: string, item: T, image: File): Promise<string> {
+  protected async addItem(path: string, item: T, image: File | string): Promise<string> {
     const userId = await this.getUserId();
     const id = this.fireStore.createId();
     if (image) {
-      await this.uploadFile2(this.fireStorage, `${path}/${id}`, image);
+      await this.uploadFile2(`${path}/${id}`, image);
     }
 
     await this.fireStore.collection<T>(`users/${userId}/${path}`).doc<T>(id).set(item);
@@ -37,7 +37,7 @@ export class BaseService<T, R> {
     return await this.fireStore.collection<T>(`users/${userId}/${path}`).doc(id).delete();
   }
 
-  protected getItems(path: string, factory: (id: string, data: T, image$: Observable<string>) => R): Observable<R[]> {
+  protected getItems(path: string, size: number, factory: (id: string, data: T, image$: Observable<string>) => R): Observable<R[]> {
     console.log(this);
     return this.authService.user$.pipe(
       switchMap(user => {
@@ -46,7 +46,7 @@ export class BaseService<T, R> {
             map(changes => changes.map(change => {
               const id = change.payload.doc.id;
               const data = change.payload.doc.data();
-              const image$ = this.getImageUrl(this.fireStorage, BaseService.getImageId(user.uid, path, id, '300'));
+              const image$ = this.getImageUrl(this.fireStorage, BaseService.getImageId(user.uid, path, id, size.toString()));
               return factory(id, data, image$);
             }))
           );
@@ -91,7 +91,15 @@ export class BaseService<T, R> {
     });
   }
 
-  private async uploadFile2(storage: AngularFireStorage, path: string, file: File): Promise<void> {
+  private async uploadFile2(path: string, file: File | string): Promise<void> {
+    if (file instanceof File) {
+      return this.uploadImageFromFile(path, file);
+    } else {
+      return this.uploadImageFromURL(path, file);
+    }
+  }
+
+  private async uploadImageFromFile(path: string, file: File): Promise<void> {
     const content = await BaseService.readFile(file);
     const url = environment.server.url + '/images/' + path;
     try {
@@ -106,4 +114,16 @@ export class BaseService<T, R> {
     }
   }
 
+  private async uploadImageFromURL(path: string, imageUrl: string): Promise<void> {
+    const url = environment.server.url + '/images/' + path;
+    try {
+      console.log(`Upload image from ${imageUrl} to ${path}`);
+      await this.http.post(url, JSON.stringify({url: imageUrl}), {headers: {'Content-Type': 'application/json'}}).pipe(
+        take(1)
+      )
+      .toPromise();
+    } catch (err) {
+      console.log('Error while uploading file from URL\n', err);
+    }
+  }
 }

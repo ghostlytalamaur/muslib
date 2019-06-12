@@ -1,5 +1,6 @@
 @import "~@angular/material/theming";
 @import "~src/styles/variables";
+@import "~src/styles/mixins";
 
 .artist-details-container {
   padding: 8px;
@@ -25,21 +26,6 @@
 
     .artist-image {
       @include mat-elevation(4);
-
-      width: 300px;
-      height: 300px;
-      background-color: black;
-
-      display: flex;
-      justify-content: center;
-      align-content: center;
-
-      img {
-        max-height: 300px;
-        max-width: 300px;
-        align-self: center;
-        width: 100%;
-      }
     }
   }
 

@@ -41,7 +41,7 @@
     {
       "type": "chrome",
       "request": "launch",
-      "runtimeExecutable": "/usr/bin/chromium-browser",
+      "runtimeExecutable": "/usr/bin/chromium",
       "runtimeArgs": [
         "--new-window",
         "-user-data-dir=${workspaceFolder}/local/ChromeDevProfile",
@@ -57,7 +57,7 @@
       "name": "ng test",
       "type": "chrome",
       "request": "launch",
-      "runtimeExecutable": "/usr/bin/chromium-browser",
+      "runtimeExecutable": "/usr/bin/chromium",
       "runtimeArgs": [
         "--new-window",
         "-user-data-dir=${workspaceFolder}/local/ChromeDevProfile",

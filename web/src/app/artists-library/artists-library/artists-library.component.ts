@@ -1,6 +1,6 @@
-import {Component, OnInit} from '@angular/core';
-import {ArtistsService} from '../services/artists.service';
-import {AlbumsService} from '../services/albums.service';
+import { Component, OnInit } from '@angular/core';
+import { AlbumsService } from '../services/albums.service';
+import { ArtistsService } from '../services/artists.service';
 
 @Component({
   selector: 'app-artists-library',

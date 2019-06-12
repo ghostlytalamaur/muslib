@@ -8,7 +8,6 @@ import {ArtistsLibraryModule} from './artists-library/artists-library.module';
 import {AppNavBarComponent} from './nav-bar/app-nav-bar.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatButtonModule, MatProgressBarModule, MatProgressSpinnerModule, MatToolbarModule} from '@angular/material';
-import {LastFmModule} from './lastfm/last-fm.module';
 import {HTTP_INTERCEPTORS} from '@angular/common/http';
 import {StatusInterceptor} from './http-interceptors/status-interceptor';
 import {StatusService} from './services/status.service';
@@ -35,7 +34,6 @@ import {AuthModule} from './auth/auth.module';
     AngularFireStorageModule,
     AuthModule,
 
-    LastFmModule,
     ArtistsLibraryModule,
     AppRoutingModule,
     BrowserAnimationsModule,

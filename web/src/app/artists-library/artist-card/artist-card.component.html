@@ -4,9 +4,9 @@
       <div class="title-text">{{artist?.name}}</div>
     </mat-card-title>
   </mat-card-header>
-  <div class="artist-image-container" mat-card-image>
+  <div class="image-300-container-black" mat-card-image>
     <ng-container *ngIf="artist?.image$ | async as image">
-      <img [src]="image" alt="">
+      <img [src]="image" alt="" class="image-300">
     </ng-container>
   </div>
 </mat-card>

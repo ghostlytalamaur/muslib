@@ -40,7 +40,7 @@ export class AlbumsService extends BaseService<FireAlbum, Album> {
   }
 
   getAlbums(artistId: string): Observable<Album[]> {
-    return this.getItems(AlbumsService.getAlbumsCollection(artistId),
+    return this.getItems(AlbumsService.getAlbumsCollection(artistId), 96,
       (id, data, image$) => new Album(id, data.year, data.name, image$, artistId));
   }
 

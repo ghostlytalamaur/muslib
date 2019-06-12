@@ -1,9 +1,9 @@
 <div class="artist-details-container">
   <ng-container *ngIf="artist$ | async as artist">
     <div class="artist-info-container">
-      <div class="artist-image">
+      <div class="artist-image image-300-container-black">
         <ng-container *ngIf="artist.image$ | async as imageUrl">
-          <img [src]="!!imageUrl ? imageUrl : ''">
+          <img [src]="!!imageUrl ? imageUrl : ''" class="image-300">
         </ng-container>
       </div>
 

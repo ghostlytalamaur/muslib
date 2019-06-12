@@ -1,5 +1,6 @@
 @import "~@angular/material/theming";
 @import "variables";
+@import "mixins";
 
 @include mat-core();
 @include angular-material-theme($theme);
@@ -26,4 +27,17 @@ app-root {
   bottom: 0;
   left: 0;
   right: 0;
+}
+
+.image-300-container {
+  @include image-300-container();
+}
+
+.image-300-container-black {
+  @include image-300-container();
+  background-color: black;
+}
+
+.image-300 {
+  @include image-300();
 }
