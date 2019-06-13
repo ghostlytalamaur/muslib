@@ -1,3 +1,6 @@
+@import "~@angular/material/theming";
+@import "~src/styles/variables";
+
 .image-selector {
   position: relative;
   display: flex;
@@ -19,19 +22,64 @@
     text-align: center;
   }
 
-  .actions {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-  }
-
   .select-button {
     align-self: center;
   }
 
   .image-300-container {
+
+    .drop-area {
+      display: none;
+      width: 100%;
+      height: 100%;
+      background-color: mat-color($accent, 900);
+      z-index: 10;
+      position: absolute;
+    }
+
+    &:hover {
+      .actions {
+        display: block;
+      }
+    }
+
+    &.drag {
+      .drop-area {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+
     &.drag * {
       pointer-events: none;
+    }
+
+    .actions {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      display: none;
+    }
+
+    .select-area {
+      display: grid;
+      grid-template-rows: 50% 50%;
+      grid-template-columns: 100%;
+      grid-template-areas:
+        "info"
+        "button";
+      justify-items: center;
+
+      p {
+        grid-area: info;
+        align-self: end;
+      }
+
+      button {
+        grid-area: button;
+        align-self: start;
+      }
     }
   }
 }
