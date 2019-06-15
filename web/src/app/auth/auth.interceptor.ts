@@ -16,9 +16,8 @@ export class AuthInterceptor implements HttpInterceptor {
         if (req.url.includes(environment.server.url)) {
             return this.authService.idToken.pipe(
                 switchMap((idToken) => {
-                    console.log('[AuthInterceptor] append authorization header');
                     const authReq = req.clone({
-                        headers: req.headers.append('Authorization', `Bearer ${idToken}`)
+                        headers: req.headers.set('Authorization', `Bearer ${idToken}`)
                     });
                     return next.handle(authReq);
                 })
