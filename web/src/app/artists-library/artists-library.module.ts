@@ -24,6 +24,7 @@ import { ArtistsListComponent } from './artists-lists/artists-list.component';
 import { NewAlbumDialogComponent } from './new-album-dialog/new-album-dialog.component';
 import { NewArtistDialogComponent } from './new-artist-dialog/new-artist-dialog.component';
 import { HttpClientModule } from '@angular/common/http';
+import { MuslibApiModule } from 'src/server/api/muslib-api.module';
 
 @NgModule({
   declarations: [
@@ -53,7 +54,8 @@ import { HttpClientModule } from '@angular/common/http';
     SharedModule,
     MatToolbarModule,
     MatDialogModule,
-    MatTableModule
+    MatTableModule,
+    MuslibApiModule
   ]
 })
 export class ArtistsLibraryModule {}
