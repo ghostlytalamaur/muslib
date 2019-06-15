@@ -1,16 +1,15 @@
-import { HttpClient } from '@angular/common/http';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireStorage } from '@angular/fire/storage';
-import { CompletionObserver, from, Observable, of } from 'rxjs';
-import { catchError, map, switchMap, take } from 'rxjs/operators';
-import { environment } from 'src/environments/environment';
+import { from, Observable, of } from 'rxjs';
+import { catchError, map, switchMap } from 'rxjs/operators';
+import { MuslibApi } from 'src/server/api/server-api';
 import { AuthService } from '../../auth/auth.service';
 import { StatusService } from '../../services/status.service';
 
 export class BaseService<T, R> {
   constructor(
     private readonly statusService: StatusService,
-    private readonly http: HttpClient,
+    private readonly server: MuslibApi,
     protected readonly authService: AuthService,
     protected readonly fireStore: AngularFirestore,
     protected readonly fireStorage: AngularFireStorage
@@ -25,7 +24,7 @@ export class BaseService<T, R> {
     const userId = await this.getUserId();
     const id = this.fireStore.createId();
     if (image) {
-      await this.uploadFile2(`${path}/${id}`, image);
+      await this.uploadFile(`${path}/${id}`, image);
     }
 
     await this.fireStore.collection<T>(`users/${userId}/${path}`).doc<T>(id).set(item);
@@ -71,59 +70,11 @@ export class BaseService<T, R> {
     );
   }
 
-  private static async readFile(file: File): Promise<ArrayBuffer> {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = (ev: ProgressEvent) => {
-        if (reader.result instanceof ArrayBuffer) {
-          resolve(reader.result);
-        } else {
-          reject(new Error('Reader result must be a ArrayBuffer.'));
-        }
-      };
-      reader.onloadend = (ev: ProgressEvent) => {
-        if (ev.loaded != ev.total) {
-          reject(new Error('Not all content can be readed.'));
-        }
-      }
-
-      reader.readAsArrayBuffer(file);
-    });
-  }
-
-  private async uploadFile2(path: string, file: File | string): Promise<void> {
-    if (file instanceof File) {
-      return this.uploadImageFromFile(path, file);
+  private uploadFile(path: string, image: File | string): Promise<void> {
+    if (image instanceof File) {
+      return this.server.upload.image(path, image);
     } else {
-      return this.uploadImageFromURL(path, file);
-    }
-  }
-
-  private async uploadImageFromFile(path: string, file: File): Promise<void> {
-    const content = await BaseService.readFile(file);
-    const url = environment.server.url + '/images/' + path;
-    try {
-      await this.http.post(url, content, { headers: { 'Content-Type': file.type }, responseType: 'arraybuffer' })
-        .pipe(
-          take(1)
-        )
-        .toPromise();
-    }
-    catch (err) {
-      console.log('Error while uploading file\n', err)
-    }
-  }
-
-  private async uploadImageFromURL(path: string, imageUrl: string): Promise<void> {
-    const url = environment.server.url + '/images/' + path;
-    try {
-      console.log(`Upload image from ${imageUrl} to ${path}`);
-      await this.http.post(url, JSON.stringify({url: imageUrl}), {headers: {'Content-Type': 'application/json'}}).pipe(
-        take(1)
-      )
-      .toPromise();
-    } catch (err) {
-      console.log('Error while uploading file from URL\n', err);
+      return this.server.upload.url(path, image);
     }
   }
 }

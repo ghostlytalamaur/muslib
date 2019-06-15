@@ -20,7 +20,8 @@
         "firebase-admin": "8.0.0",
         "request": "2.88.0",
         "sharp": "^0.22.1",
-        "cors": "2.8.5"
+        "cors": "2.8.5",
+        "musicbrainz-api": "0.3.8"
     },
     "devDependencies": {
         "typescript": "^3.4.5",

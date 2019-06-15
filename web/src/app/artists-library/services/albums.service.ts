@@ -1,13 +1,13 @@
-import {Injectable} from '@angular/core';
-import {AngularFirestore} from '@angular/fire/firestore';
-import {AngularFireStorage} from '@angular/fire/storage';
-import {Observable} from 'rxjs';
-import {Album} from '../../models/album';
-import {AuthService} from '../../auth/auth.service';
-import {BaseService} from './base-library.service';
-import {Collections} from './constants';
-import {StatusService} from '../../services/status.service';
-import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFireStorage } from '@angular/fire/storage';
+import { Observable } from 'rxjs';
+import { MuslibApi } from 'src/server/api/server-api';
+import { AuthService } from '../../auth/auth.service';
+import { Album } from '../../models/album';
+import { StatusService } from '../../services/status.service';
+import { BaseService } from './base-library.service';
+import { Collections } from './constants';
 
 interface FireAlbum {
   year: number;
@@ -19,12 +19,12 @@ export class AlbumsService extends BaseService<FireAlbum, Album> {
 
   constructor(
     statusService: StatusService,
-    http: HttpClient,
+    server: MuslibApi,
     authService: AuthService,
     fireStore: AngularFirestore,
     fireStorage: AngularFireStorage
   ) {
-    super(statusService, http, authService, fireStore, fireStorage);
+    super(statusService, server, authService, fireStore, fireStorage);
   }
 
   static getAlbumsCollection(artistId: string): string {

@@ -3,12 +3,12 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { Observable } from 'rxjs';
 import { map, publish, refCount } from 'rxjs/operators';
+import { MuslibApi } from 'src/server/api/server-api';
 import { AuthService } from '../../auth/auth.service';
 import { Artist } from '../../models/artist';
 import { StatusService } from '../../services/status.service';
 import { BaseService } from './base-library.service';
 import { Collections } from './constants';
-import { HttpClient } from '@angular/common/http';
 
 interface FireArtist {
   name: string;
@@ -21,13 +21,12 @@ export class ArtistsService extends BaseService<FireArtist, Artist> {
 
   constructor(
     statusService: StatusService,
-    http: HttpClient,
+    server: MuslibApi,
     authService: AuthService,
     fireStore: AngularFirestore,
     storage: AngularFireStorage
   ) {
-    console.log('ArtistService constructor', !!statusService, !!authService, !!fireStore, !!storage);
-    super(statusService, http, authService, fireStore, storage);
+    super(statusService, server, authService, fireStore, storage);
   }
 
   getArtists(): Observable<Artist[]> {
