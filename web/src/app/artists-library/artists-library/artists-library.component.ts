@@ -6,16 +6,10 @@ import { ArtistsService } from '../services/artists.service';
   selector: 'app-artists-library',
   templateUrl: './artists-library.component.html',
   styleUrls: ['./artists-library.component.scss'],
-  providers: [
-    ArtistsService,
-    AlbumsService
-  ]
+  providers: [ArtistsService, AlbumsService]
 })
 export class ArtistsLibraryComponent implements OnInit {
+  constructor() {}
 
-  constructor() {
-  }
-
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 }

@@ -1,6 +1,6 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import {ImageSelectorComponent} from './image-selector.component';
+import { ImageSelectorComponent } from './image-selector.component';
 
 describe('ImageSelectorComponent', () => {
   let component: ImageSelectorComponent;
@@ -9,8 +9,7 @@ describe('ImageSelectorComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ImageSelectorComponent]
-    })
-      .compileComponents();
+    }).compileComponents();
   }));
 
   beforeEach(() => {

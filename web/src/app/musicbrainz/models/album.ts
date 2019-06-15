@@ -4,6 +4,5 @@ export class Album {
     public readonly title: string,
     public readonly date: string,
     public readonly primaryType: string
-  ) {
-  }
+  ) {}
 }

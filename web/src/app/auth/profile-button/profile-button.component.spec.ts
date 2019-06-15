@@ -1,12 +1,12 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import {ProfileButtonComponent} from './profile-button.component';
-import {NO_ERRORS_SCHEMA} from '@angular/core';
-import {AuthService} from '../auth.service';
-import {instance, mock, when} from 'ts-mockito';
-import {BehaviorSubject} from 'rxjs';
-import {User} from '../user';
-import {By} from '@angular/platform-browser';
+import { ProfileButtonComponent } from './profile-button.component';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { AuthService } from '../auth.service';
+import { instance, mock, when } from 'ts-mockito';
+import { BehaviorSubject } from 'rxjs';
+import { User } from '../user';
+import { By } from '@angular/platform-browser';
 
 describe('ProfileButtonComponent', () => {
   let component: ProfileButtonComponent;
@@ -20,11 +20,10 @@ describe('ProfileButtonComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ProfileButtonComponent],
       providers: [
-        {provide: AuthService, useFactory: () => instance(authService)}
+        { provide: AuthService, useFactory: () => instance(authService) }
       ],
       schemas: [NO_ERRORS_SCHEMA]
-    })
-      .compileComponents();
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -38,14 +37,16 @@ describe('ProfileButtonComponent', () => {
   });
 
   it('should show user name when user signed in', () => {
-    const linkEl = fixture.debugElement.query(By.css('a')).nativeElement as HTMLLinkElement;
+    const linkEl = fixture.debugElement.query(By.css('a'))
+      .nativeElement as HTMLLinkElement;
     expect(linkEl.textContent).toBe(user.value.displayName);
   });
 
   it('should show Login text when user signed out', () => {
     user.next(null);
     fixture.detectChanges();
-    const linkEl = fixture.debugElement.query(By.css('a')).nativeElement as HTMLLinkElement;
+    const linkEl = fixture.debugElement.query(By.css('a'))
+      .nativeElement as HTMLLinkElement;
     expect(linkEl.textContent).toBe('Login');
   });
 });

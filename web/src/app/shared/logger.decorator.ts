@@ -4,8 +4,11 @@ export interface LogMethodOptions {
 
 export function LogMethod(options?: LogMethodOptions): MethodDecorator {
   console.log('Evaluate Log decorator');
-  return (target: object, propertyKey: string,
-          propertyDescriptor: PropertyDescriptor): PropertyDescriptor => {
+  return (
+    target: object,
+    propertyKey: string,
+    propertyDescriptor: PropertyDescriptor
+  ): PropertyDescriptor => {
     return {
       value(...args: any[]): any {
         console.groupCollapsed(`${target.constructor.name}.${propertyKey}()`);
@@ -35,7 +38,9 @@ export function LogMethod(options?: LogMethodOptions): MethodDecorator {
   };
 }
 
-export function LogConstructor<T extends { new(...args: any[]): {} }>(ctor: T): any {
+export function LogConstructor<T extends { new (...args: any[]): {} }>(
+  ctor: T
+): any {
   // const Wrapper: any = function NewCTor(...args: any[]): any {
   //   class Wrapper extends ctor {
   //     constructor(...childArgs: any[]) {
@@ -68,7 +73,6 @@ export function LogConstructor<T extends { new(...args: any[]): {} }>(ctor: T): 
   Wrapper.prototype = Object.create(ctor.prototype);
   return Wrapper;
 
-
   // const original = ctor;
   // // tslint:disable-next-line:typedef
   // const wrapper: any = function Wrapper(...args) {
@@ -88,4 +92,3 @@ export function LogConstructor<T extends { new(...args: any[]): {} }>(ctor: T): 
   // wrapper.prototype = Object.create(ctor.prototype);
   // return wrapper;
 }
-

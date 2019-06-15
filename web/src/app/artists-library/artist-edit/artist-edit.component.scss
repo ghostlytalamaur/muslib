@@ -1,5 +1,5 @@
-@import "~@angular/material/theming";
-@import "~src/styles/variables";
+@import '~@angular/material/theming';
+@import '~src/styles/variables';
 
 form {
   $image-size: 300px;
@@ -10,7 +10,7 @@ form {
   justify-items: stretch;
   grid-template-columns: 50fr $image-size minmax($image-size, 100fr) 50fr;
   grid-template-rows: 1fr auto;
-  grid-template-areas: ". img fields  ." ". ... actions .";
+  grid-template-areas: '. img fields  .' '. ... actions .';
 
   .actions {
     grid-area: actions;

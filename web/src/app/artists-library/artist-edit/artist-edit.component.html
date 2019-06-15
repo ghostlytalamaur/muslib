@@ -1,12 +1,19 @@
 <form [formGroup]="form" (ngSubmit)="onSubmit()">
-
-  <app-image-selector (imageSelected)="imageFile = $event" altText="Artist image"></app-image-selector>
+  <app-image-selector
+    (imageSelected)="imageFile = $event"
+    altText="Artist image"
+  ></app-image-selector>
 
   <div class="fields">
     <mat-form-field>
       <label>
-        <input class="artist-input" formControlName="name" matInput placeholder="Artist"
-               type="text">
+        <input
+          class="artist-input"
+          formControlName="name"
+          matInput
+          placeholder="Artist"
+          type="text"
+        />
       </label>
     </mat-form-field>
   </div>
@@ -14,5 +21,4 @@
     <button [disabled]="!form.valid" mat-button type="submit">Submit</button>
     <button mat-button routerLink="../" type="button">Cancel</button>
   </div>
-
 </form>

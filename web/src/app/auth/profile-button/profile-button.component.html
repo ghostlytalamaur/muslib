@@ -1,5 +1,7 @@
 <ng-container *ngIf="user$ | async as user; else loginLink">
-  <a mat-button routerLink="profile" routerLinkActive="active">{{user.displayName}}</a>
+  <a mat-button routerLink="profile" routerLinkActive="active">{{
+    user.displayName
+  }}</a>
 </ng-container>
 
 <ng-template #loginLink>

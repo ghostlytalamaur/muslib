@@ -1,7 +1,7 @@
-import {Component, OnInit} from '@angular/core';
-import {AuthService} from '../auth.service';
-import {Observable} from 'rxjs';
-import {User} from '../user';
+import { Component, OnInit } from '@angular/core';
+import { AuthService } from '../auth.service';
+import { Observable } from 'rxjs';
+import { User } from '../user';
 
 @Component({
   selector: 'app-profile-button',
@@ -9,16 +9,11 @@ import {User} from '../user';
   styleUrls: ['./profile-button.component.scss']
 })
 export class ProfileButtonComponent implements OnInit {
-
   readonly user$: Observable<User | null>;
 
-  constructor(
-    private readonly authService: AuthService
-  ) {
+  constructor(private readonly authService: AuthService) {
     this.user$ = this.authService.user$;
   }
 
-  ngOnInit(): void {
-  }
-
+  ngOnInit(): void {}
 }

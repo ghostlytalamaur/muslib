@@ -1,18 +1,20 @@
 <h1 mat-dialog-title>Add new album</h1>
 <form (ngSubmit)="onSubmit()" [formGroup]="form">
   <div class="dialog-content" mat-dialog-content>
-
-    <app-image-selector (imageSelected)="this.imageFile = $event" altText="Album image"></app-image-selector>
+    <app-image-selector
+      (imageSelected)="this.imageFile = $event"
+      altText="Album image"
+    ></app-image-selector>
 
     <div class="fields">
       <mat-form-field>
         <label>
-          <input formControlName="name" matInput placeholder="Album name">
+          <input formControlName="name" matInput placeholder="Album name" />
         </label>
       </mat-form-field>
       <mat-form-field>
         <label>
-          <input formControlName="year" matInput placeholder="Year">
+          <input formControlName="year" matInput placeholder="Year" />
         </label>
       </mat-form-field>
     </div>

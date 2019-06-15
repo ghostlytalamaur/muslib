@@ -1,5 +1,5 @@
-import {Observable, ReplaySubject, Subject} from 'rxjs';
-import {convertToParamMap, ParamMap, Params} from '@angular/router';
+import { Observable, ReplaySubject, Subject } from 'rxjs';
+import { convertToParamMap, ParamMap, Params } from '@angular/router';
 
 export class ActivatedRouteStub {
   private subject: Subject<ParamMap> = new ReplaySubject<ParamMap>();

@@ -17,18 +17,11 @@ import { AuthInterceptor } from './auth.interceptor';
     AngularFireAuthModule,
     AuthRoutingModule
   ],
-  declarations: [
-    LoginComponent,
-    ProfileComponent,
-    ProfileButtonComponent
-  ],
-  exports: [
-    ProfileButtonComponent
-  ],
+  declarations: [LoginComponent, ProfileComponent, ProfileButtonComponent],
+  exports: [ProfileButtonComponent],
   providers: [
     AuthService,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
   ]
 })
-export class AuthModule {
-}
+export class AuthModule {}

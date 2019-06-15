@@ -1,5 +1,5 @@
 <ng-container *ngIf="user$ | async as user; else errorTemplate">
-  <p class="user-name">User: {{user.displayName}}</p>
+  <p class="user-name">User: {{ user.displayName }}</p>
 
   <button (click)="logout()" mat-raised-button>Logout</button>
 </ng-container>

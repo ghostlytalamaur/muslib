@@ -12,15 +12,13 @@ export interface NewArtistData {
   styleUrls: ['./new-artist-dialog.component.scss']
 })
 export class NewArtistDialogComponent implements OnInit {
-
-  artistData: NewArtistData = {name: '', image: undefined};
+  artistData: NewArtistData = { name: '', image: undefined };
 
   constructor(
     private dialogRef: MatDialogRef<NewArtistDialogComponent, NewArtistData>
-  ) { }
+  ) {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   onSubmit(): void {
     this.dialogRef.close(this.artistData);

@@ -1,13 +1,13 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import {ArtistCardComponent} from './artist-card.component';
-import {MatCard, MatCardModule, MatMenuModule} from '@angular/material';
-import {Artist} from '../../models/artist';
-import {of} from 'rxjs';
-import {By} from '@angular/platform-browser';
-import {SharedModule} from '../../shared/shared.module';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {spy, verify} from 'ts-mockito';
+import { ArtistCardComponent } from './artist-card.component';
+import { MatCard, MatCardModule, MatMenuModule } from '@angular/material';
+import { Artist } from '../../models/artist';
+import { of } from 'rxjs';
+import { By } from '@angular/platform-browser';
+import { SharedModule } from '../../shared/shared.module';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { spy, verify } from 'ts-mockito';
 
 describe('ArtistCardComponent', () => {
   let component: ArtistCardComponent;
@@ -22,9 +22,8 @@ describe('ArtistCardComponent', () => {
         MatCardModule,
         SharedModule
       ],
-      declarations: [ ArtistCardComponent ]
-    })
-    .compileComponents();
+      declarations: [ArtistCardComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -44,12 +43,15 @@ describe('ArtistCardComponent', () => {
   });
 
   it('should show artist name in header', () => {
-    const headerTextEl = fixture.debugElement.query(By.css('.title-text')).nativeElement;
+    const headerTextEl = fixture.debugElement.query(By.css('.title-text'))
+      .nativeElement;
     expect(headerTextEl.textContent).toBe(artist.name);
   });
 
   it('should show artist image', () => {
-    const imageEl = fixture.debugElement.query(By.css('.artist-image-container > img')).nativeElement as HTMLImageElement;
+    const imageEl = fixture.debugElement.query(
+      By.css('.artist-image-container > img')
+    ).nativeElement as HTMLImageElement;
     expect(imageEl.src).toContain(imageUrl);
   });
 
@@ -57,7 +59,9 @@ describe('ArtistCardComponent', () => {
     const deleteArtistSpy = spy(component.deleteArtist);
 
     const card = fixture.debugElement.query(By.directive(MatCard));
-    (card.nativeElement as HTMLElement).dispatchEvent(new MouseEvent('contextmenu'));
+    (card.nativeElement as HTMLElement).dispatchEvent(
+      new MouseEvent('contextmenu')
+    );
 
     const deleteBtn = fixture.debugElement.query(By.css('#deleteButton'));
     expect(deleteBtn).toBeTruthy('Delete button not found.');

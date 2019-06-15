@@ -16,7 +16,6 @@ interface FireAlbum {
 
 @Injectable()
 export class AlbumsService extends BaseService<FireAlbum, Album> {
-
   constructor(
     statusService: StatusService,
     server: MuslibApi,
@@ -31,8 +30,17 @@ export class AlbumsService extends BaseService<FireAlbum, Album> {
     return `${Collections.ARTISTS}/${artistId}/${Collections.ALBUMS}`;
   }
 
-  addAlbum(artistId: string, year: number, name: string, image: File): Promise<string> {
-    return this.addItem(AlbumsService.getAlbumsCollection(artistId), {name, year}, image);
+  addAlbum(
+    artistId: string,
+    year: number,
+    name: string,
+    image: File
+  ): Promise<string> {
+    return this.addItem(
+      AlbumsService.getAlbumsCollection(artistId),
+      { name, year },
+      image
+    );
   }
 
   deleteAlbum(artistId: string, id: string): Promise<void> {
@@ -40,8 +48,11 @@ export class AlbumsService extends BaseService<FireAlbum, Album> {
   }
 
   getAlbums(artistId: string): Observable<Album[]> {
-    return this.getItems(AlbumsService.getAlbumsCollection(artistId), 96,
-      (id, data, image$) => new Album(id, data.year, data.name, image$, artistId));
+    return this.getItems(
+      AlbumsService.getAlbumsCollection(artistId),
+      96,
+      (id, data, image$) =>
+        new Album(id, data.year, data.name, image$, artistId)
+    );
   }
-
 }

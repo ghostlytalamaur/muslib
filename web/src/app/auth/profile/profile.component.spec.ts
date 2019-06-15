@@ -1,14 +1,20 @@
-import {async, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
+import {
+  async,
+  ComponentFixture,
+  fakeAsync,
+  TestBed,
+  tick
+} from '@angular/core/testing';
 
-import {ProfileComponent} from './profile.component';
-import {NO_ERRORS_SCHEMA} from '@angular/core';
-import {Router} from '@angular/router';
-import {instance, mock, when} from 'ts-mockito';
-import {RouterTestingModule} from '@angular/router/testing';
-import {AuthService} from '../auth.service';
-import {BehaviorSubject} from 'rxjs';
-import {User} from '../user';
-import {By} from '@angular/platform-browser';
+import { ProfileComponent } from './profile.component';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { Router } from '@angular/router';
+import { instance, mock, when } from 'ts-mockito';
+import { RouterTestingModule } from '@angular/router/testing';
+import { AuthService } from '../auth.service';
+import { BehaviorSubject } from 'rxjs';
+import { User } from '../user';
+import { By } from '@angular/platform-browser';
 
 describe('ProfileComponent', () => {
   let component: ProfileComponent;
@@ -22,16 +28,13 @@ describe('ProfileComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [
-        RouterTestingModule
-      ],
+      imports: [RouterTestingModule],
       declarations: [ProfileComponent],
       providers: [
-        {provide: AuthService, useFactory: () => instance(authService)}
+        { provide: AuthService, useFactory: () => instance(authService) }
       ],
       schemas: [NO_ERRORS_SCHEMA]
-    })
-      .compileComponents();
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -54,7 +57,9 @@ describe('ProfileComponent', () => {
   it('should show user name when user signed in', () => {
     const userNameDe = fixture.debugElement.query(By.css('.user-name'));
     expect(userNameDe).toBeTruthy('cannot find user-name element');
-    expect((userNameDe.nativeElement as HTMLElement).textContent).toContain(user.value.displayName);
+    expect((userNameDe.nativeElement as HTMLElement).textContent).toContain(
+      user.value.displayName
+    );
   });
 
   it('should hide logout button when user signed out', () => {
@@ -66,11 +71,12 @@ describe('ProfileComponent', () => {
 
   it('should navigate to login screen after logout', fakeAsync(() => {
     const logoutBtn = fixture.debugElement.query(By.css('button'));
-    (logoutBtn.nativeElement as HTMLElement).dispatchEvent(new MouseEvent('click'));
+    (logoutBtn.nativeElement as HTMLElement).dispatchEvent(
+      new MouseEvent('click')
+    );
 
     tick();
     expect(routerSpy).toHaveBeenCalledWith(['login']);
     expect(routerSpy).toHaveBeenCalledTimes(1);
   }));
-
 });

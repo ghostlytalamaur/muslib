@@ -1,10 +1,9 @@
-@import "~@angular/material/theming";
-@import "~src/styles/variables";
-@import "~src/styles/mixins";
+@import '~@angular/material/theming';
+@import '~src/styles/variables';
+@import '~src/styles/mixins';
 
 .artist-details-container {
   padding: 8px;
-
 
   .artist-info-container {
     display: flex;

@@ -3,12 +3,12 @@
     <div class="artist-info-container">
       <div class="artist-image image-300-container-black">
         <ng-container *ngIf="artist.image$ | async as imageUrl">
-          <img [src]="!!imageUrl ? imageUrl : ''" class="image-300">
+          <img [src]="!!imageUrl ? imageUrl : ''" class="image-300" />
         </ng-container>
       </div>
 
       <div class="artist-info-main">
-        <h1>{{artist.name}}</h1>
+        <h1>{{ artist.name }}</h1>
 
         <div class="actions">
           <button (click)="addNewAlbum()" mat-flat-button>Add new album</button>
@@ -17,30 +17,37 @@
     </div>
   </ng-container>
 
-  <table [dataSource]="albums$ | async" class="albums-table" mat-table role="grid">
+  <table
+    [dataSource]="albums$ | async"
+    class="albums-table"
+    mat-table
+    role="grid"
+  >
     <ng-container matColumnDef="image">
       <th *matHeaderCellDef mat-header-cell></th>
       <td *matCellDef="let album" class="cell" mat-cell>
-        <img src="{{album.image$ | async}}">
+        <img src="{{ album.image$ | async }}" />
       </td>
     </ng-container>
 
     <ng-container matColumnDef="year">
       <th *matHeaderCellDef mat-header-cell>Year</th>
-      <td *matCellDef="let album" mat-cell>{{album.year}}</td>
+      <td *matCellDef="let album" mat-cell>{{ album.year }}</td>
     </ng-container>
     <ng-container matColumnDef="name">
       <th *matHeaderCellDef mat-header-cell>Album</th>
-      <td *matCellDef="let album" mat-cell>{{album.name}}</td>
+      <td *matCellDef="let album" mat-cell>{{ album.name }}</td>
     </ng-container>
 
     <tr *matHeaderRowDef="['image', 'year', 'name']" mat-header-row></tr>
-    <tr *matRowDef="let row; columns: ['image', 'year', 'name']; let album" [appCtxMatMenuTriggerFor]="menu"
-        [matMenuTriggerData]="{album: album}"
-        mat-row></tr>
+    <tr
+      *matRowDef="let row; columns: ['image', 'year', 'name']; let album"
+      [appCtxMatMenuTriggerFor]="menu"
+      [matMenuTriggerData]="{ album: album }"
+      mat-row
+    ></tr>
   </table>
 </div>
-
 
 <mat-menu #menu="matMenu">
   <ng-template let-album="album" matMenuContent>

@@ -1,5 +1,5 @@
-import {Component, OnInit} from '@angular/core';
-import {StatusService} from '../services/status.service';
+import { Component, OnInit } from '@angular/core';
+import { StatusService } from '../services/status.service';
 
 @Component({
   selector: 'app-nav-bar',
@@ -7,13 +7,7 @@ import {StatusService} from '../services/status.service';
   styleUrls: ['./app-nav-bar.component.scss']
 })
 export class AppNavBarComponent implements OnInit {
+  constructor(readonly statusService: StatusService) {}
 
-  constructor(
-    readonly statusService: StatusService
-  ) {
-  }
-
-  ngOnInit(): void {
-  }
-
+  ngOnInit(): void {}
 }

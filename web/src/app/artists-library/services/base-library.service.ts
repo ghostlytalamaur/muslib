@@ -13,41 +13,66 @@ export class BaseService<T, R> {
     protected readonly authService: AuthService,
     protected readonly fireStore: AngularFirestore,
     protected readonly fireStorage: AngularFireStorage
-  ) {
-  }
+  ) {}
 
-  private static getImageId(userId: string, path: string, docId: string, size: string): string {
+  private static getImageId(
+    userId: string,
+    path: string,
+    docId: string,
+    size: string
+  ): string {
     return `users/${userId}/${path}/${docId}/${docId}_${size}`;
   }
 
-  protected async addItem(path: string, item: T, image: File | string): Promise<string> {
+  protected async addItem(
+    path: string,
+    item: T,
+    image: File | string
+  ): Promise<string> {
     const userId = await this.getUserId();
     const id = this.fireStore.createId();
     if (image) {
       await this.uploadFile(`${path}/${id}`, image);
     }
 
-    await this.fireStore.collection<T>(`users/${userId}/${path}`).doc<T>(id).set(item);
+    await this.fireStore
+      .collection<T>(`users/${userId}/${path}`)
+      .doc<T>(id)
+      .set(item);
     return Promise.resolve(id);
   }
 
   protected async deleteItem(path: string, id: string): Promise<void> {
     const userId = await this.getUserId();
-    return await this.fireStore.collection<T>(`users/${userId}/${path}`).doc(id).delete();
+    return await this.fireStore
+      .collection<T>(`users/${userId}/${path}`)
+      .doc(id)
+      .delete();
   }
 
-  protected getItems(path: string, size: number, factory: (id: string, data: T, image$: Observable<string>) => R): Observable<R[]> {
+  protected getItems(
+    path: string,
+    size: number,
+    factory: (id: string, data: T, image$: Observable<string>) => R
+  ): Observable<R[]> {
     console.log(this);
     return this.authService.user$.pipe(
       switchMap(user => {
-        return this.fireStore.collection<T>(`users/${user.uid}/${path}`).snapshotChanges()
+        return this.fireStore
+          .collection<T>(`users/${user.uid}/${path}`)
+          .snapshotChanges()
           .pipe(
-            map(changes => changes.map(change => {
-              const id = change.payload.doc.id;
-              const data = change.payload.doc.data();
-              const image$ = this.getImageUrl(this.fireStorage, BaseService.getImageId(user.uid, path, id, size.toString()));
-              return factory(id, data, image$);
-            }))
+            map(changes =>
+              changes.map(change => {
+                const id = change.payload.doc.id;
+                const data = change.payload.doc.data();
+                const image$ = this.getImageUrl(
+                  this.fireStorage,
+                  BaseService.getImageId(user.uid, path, id, size.toString())
+                );
+                return factory(id, data, image$);
+              })
+            )
           );
       })
     );
@@ -62,12 +87,15 @@ export class BaseService<T, R> {
     }
   }
 
-  private getImageUrl(storage: AngularFireStorage, path: string): Observable<string> {
-    const urlPromise = storage.storage.ref(path).getDownloadURL()
+  private getImageUrl(
+    storage: AngularFireStorage,
+    path: string
+  ): Observable<string> {
+    const urlPromise = storage.storage
+      .ref(path)
+      .getDownloadURL()
       .catch(() => Promise.resolve(''));
-    return from(urlPromise).pipe(
-      catchError(() => of(''))
-    );
+    return from(urlPromise).pipe(catchError(() => of('')));
   }
 
   private uploadFile(path: string, image: File | string): Promise<void> {

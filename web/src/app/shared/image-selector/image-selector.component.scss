@@ -1,5 +1,5 @@
-@import "~@angular/material/theming";
-@import "~src/styles/variables";
+@import '~@angular/material/theming';
+@import '~src/styles/variables';
 
 .image-selector {
   position: relative;
@@ -27,7 +27,6 @@
   }
 
   .image-300-container {
-
     .drop-area {
       display: none;
       width: 100%;
@@ -67,8 +66,8 @@
       grid-template-rows: 50% 50%;
       grid-template-columns: 100%;
       grid-template-areas:
-        "info"
-        "button";
+        'info'
+        'button';
       justify-items: center;
 
       p {

@@ -1,17 +1,20 @@
-import {Injectable} from '@angular/core';
-import {BehaviorSubject, Observable} from 'rxjs';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable()
 export class StatusService {
-
   private operationCounter = 0;
-  private isRunning: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  private isRunning: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(
+    false
+  );
   isRunning$: Observable<boolean> = this.isRunning.asObservable();
-
 
   startOperation(): void {
     this.operationCounter++;
-    console.log('[StatusService] startOperation(); operationCounter = ', this.operationCounter);
+    console.log(
+      '[StatusService] startOperation(); operationCounter = ',
+      this.operationCounter
+    );
     if (this.operationCounter === 1) {
       this.isRunning.next(true);
     }
@@ -19,7 +22,10 @@ export class StatusService {
 
   endOperation(): void {
     this.operationCounter--;
-    console.log('[StatusService] endOperation(); operationCounter = ', this.operationCounter);
+    console.log(
+      '[StatusService] endOperation(); operationCounter = ',
+      this.operationCounter
+    );
     if (this.operationCounter === 0) {
       this.isRunning.next(false);
     }

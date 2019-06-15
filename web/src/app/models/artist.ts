@@ -1,8 +1,7 @@
-import {Observable} from 'rxjs';
-import {publishReplay, refCount} from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { publishReplay, refCount } from 'rxjs/operators';
 
 export class Artist {
-
   readonly image$: Observable<string>;
 
   constructor(

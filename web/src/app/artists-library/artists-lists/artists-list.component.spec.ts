@@ -1,17 +1,17 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import {ArtistsListComponent} from './artists-list.component';
-import {CUSTOM_ELEMENTS_SCHEMA, DebugElement} from '@angular/core';
-import {ArtistsService} from '../services/artists.service';
-import {BehaviorSubject, of} from 'rxjs';
-import {Artist} from '../../models/artist';
-import {By} from '@angular/platform-browser';
-import {ArtistCardComponent} from '../artist-card/artist-card.component';
-import {RouterTestingModule} from '@angular/router/testing';
-import {ActivatedRouteStub} from '../../testing/activated-route-stub';
-import {ActivatedRoute, Router} from '@angular/router';
-import {MatCardModule, MatMenuModule} from '@angular/material';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import { ArtistsListComponent } from './artists-list.component';
+import { CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';
+import { ArtistsService } from '../services/artists.service';
+import { BehaviorSubject, of } from 'rxjs';
+import { Artist } from '../../models/artist';
+import { By } from '@angular/platform-browser';
+import { ArtistCardComponent } from '../artist-card/artist-card.component';
+import { RouterTestingModule } from '@angular/router/testing';
+import { ActivatedRouteStub } from '../../testing/activated-route-stub';
+import { ActivatedRoute, Router } from '@angular/router';
+import { MatCardModule, MatMenuModule } from '@angular/material';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 const TEST_ARTISTS = [
   new Artist('artist1', 'Nightwish', of('')),
@@ -23,10 +23,13 @@ describe('ArtistsListComponent', () => {
   let fixture: ComponentFixture<ArtistsListComponent>;
   let cardsCont: DebugElement;
   const artists = new BehaviorSubject<Artist[]>(null);
-  const artistService = jasmine.createSpyObj<ArtistsService>('artistServiceSpy', {
-    getArtists: artists.asObservable(),
-    deleteArtist: Promise.resolve()
-  });
+  const artistService = jasmine.createSpyObj<ArtistsService>(
+    'artistServiceSpy',
+    {
+      getArtists: artists.asObservable(),
+      deleteArtist: Promise.resolve()
+    }
+  );
   const activatedRoute = new ActivatedRouteStub();
 
   beforeEach(async(() => {
@@ -37,17 +40,13 @@ describe('ArtistsListComponent', () => {
         MatMenuModule,
         RouterTestingModule
       ],
-      declarations: [
-        ArtistsListComponent,
-        ArtistCardComponent
-      ],
+      declarations: [ArtistsListComponent, ArtistCardComponent],
       providers: [
-        {provide: ArtistsService, useValue: artistService},
-        {provide: ActivatedRoute, useValue: activatedRoute}
+        { provide: ArtistsService, useValue: artistService },
+        { provide: ActivatedRoute, useValue: activatedRoute }
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
-    })
-      .compileComponents();
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -73,17 +72,23 @@ describe('ArtistsListComponent', () => {
     artists.next([...TEST_ARTISTS, new Artist('id3', 'TestArtist3', of(''))]);
     fixture.detectChanges();
     const cards = cardsCont.queryAll(By.directive(ArtistCardComponent));
-    expect(cards.length).toBe(TEST_ARTISTS.length + 1, 'invalid artists count after emit');
+    expect(cards.length).toBe(
+      TEST_ARTISTS.length + 1,
+      'invalid artists count after emit'
+    );
   });
 
   it('should navigate to details by click on card', () => {
-    const routerSpy = spyOn(fixture.debugElement.injector.get(Router), 'navigate')
-      .and
-      .returnValue(Promise.resolve());
+    const routerSpy = spyOn(
+      fixture.debugElement.injector.get(Router),
+      'navigate'
+    ).and.returnValue(Promise.resolve());
     const card = cardsCont.query(By.directive(ArtistCardComponent));
     const cardComp = card.injector.get(ArtistCardComponent);
     (card.nativeElement as HTMLElement).dispatchEvent(new MouseEvent('click'));
-    expect(routerSpy).toHaveBeenCalledWith([cardComp.artist.id], {relativeTo: activatedRoute});
+    expect(routerSpy).toHaveBeenCalledWith([cardComp.artist.id], {
+      relativeTo: activatedRoute
+    });
   });
 
   it('should delete artist', () => {

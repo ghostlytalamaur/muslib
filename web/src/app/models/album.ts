@@ -1,8 +1,7 @@
-import {Observable} from 'rxjs';
-import {publish, refCount} from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { publish, refCount } from 'rxjs/operators';
 
 export class Album {
-
   readonly image$: Observable<string>;
 
   constructor(

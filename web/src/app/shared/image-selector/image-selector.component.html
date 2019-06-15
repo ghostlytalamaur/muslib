@@ -1,32 +1,50 @@
 <div class="image-selector">
-
-  <div class="image-300-container"
+  <div
+    class="image-300-container"
     (dragover)="onDragOver($event)"
     (dragenter)="onDragEnter($event)"
     (dragleave)="onDragLeave($event)"
     (drop)="onDrop($event)"
-    [ngClass]="{'drag': isDrag}"
-    >
-
+    [ngClass]="{ drag: isDrag }"
+  >
     <div class="drop-area">Drop files here</div>
 
     <ng-container *ngIf="image; else selectButton">
-        <img [src]="image" alt="{{altText}}" class="image-preview image-300">
-        <div class="actions">
-            <button
-                matTooltip="Remove image" [matTooltipShowDelay]="500"
-                mat-button type="button" (click)="clearImage()">X</button>
-        </div>
+      <img [src]="image" alt="{{ altText }}" class="image-preview image-300" />
+      <div class="actions">
+        <button
+          matTooltip="Remove image"
+          [matTooltipShowDelay]="500"
+          mat-button
+          type="button"
+          (click)="clearImage()"
+        >
+          X
+        </button>
+      </div>
     </ng-container>
 
     <ng-template #selectButton>
       <div class="select-area">
-        <p *ngIf="getError() as error" class="error-text">{{error}}</p>
-        <button mat-raised-button class="select-button" type="button" (click)="fileChooser.click($event)">Click to select image</button>
+        <p *ngIf="getError() as error" class="error-text">{{ error }}</p>
+        <button
+          mat-raised-button
+          class="select-button"
+          type="button"
+          (click)="fileChooser.click($event)"
+        >
+          Click to select image
+        </button>
       </div>
     </ng-template>
   </div>
 
-  <input (change)="onFileSelected($event)" accept="image/png, image/jpeg" placeholder="Image url" type="file"
-    #fileChooser class="fileChooser">
+  <input
+    (change)="onFileSelected($event)"
+    accept="image/png, image/jpeg"
+    placeholder="Image url"
+    type="file"
+    #fileChooser
+    class="fileChooser"
+  />
 </div>

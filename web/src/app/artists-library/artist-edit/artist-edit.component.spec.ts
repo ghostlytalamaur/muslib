@@ -1,9 +1,9 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import {ArtistEditComponent} from './artist-edit.component';
-import {NO_ERRORS_SCHEMA} from '@angular/core';
-import {ArtistsService} from '../services/artists.service';
-import {RouterTestingModule} from '@angular/router/testing';
+import { ArtistEditComponent } from './artist-edit.component';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { ArtistsService } from '../services/artists.service';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('ArtistEditComponent', () => {
   let component: ArtistEditComponent;
@@ -14,16 +14,11 @@ describe('ArtistEditComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [
-        RouterTestingModule
-      ],
+      imports: [RouterTestingModule],
       declarations: [ArtistEditComponent],
-      providers: [
-        {provide: ArtistsService, useValue: artistService}
-      ],
+      providers: [{ provide: ArtistsService, useValue: artistService }],
       schemas: [NO_ERRORS_SCHEMA]
-    })
-    .compileComponents();
+    }).compileComponents();
   }));
 
   beforeEach(() => {

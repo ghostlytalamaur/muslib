@@ -1,14 +1,19 @@
-import {Component, EventEmitter, Input, OnInit, Output, ViewChild, ElementRef} from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewChild,
+  ElementRef
+} from '@angular/core';
 
 function isInputElement(eventTarget: any): eventTarget is HTMLInputElement {
   return eventTarget instanceof HTMLInputElement;
 }
 
 function isValidImage(image: File): boolean {
-  const fileTypes = [
-    'image/jpeg',
-    'image/png'
-  ];
+  const fileTypes = ['image/jpeg', 'image/png'];
 
   return !!fileTypes.find(value => image.type.toLowerCase() === value);
 }
@@ -19,7 +24,6 @@ function isValidImage(image: File): boolean {
   styleUrls: ['./image-selector.component.scss']
 })
 export class ImageSelectorComponent implements OnInit {
-
   @Input()
   image = '';
 
@@ -29,17 +33,15 @@ export class ImageSelectorComponent implements OnInit {
   @Output()
   imageSelected: EventEmitter<File> = new EventEmitter<File>();
 
-  @ViewChild('fileChooser', {static: false})
+  @ViewChild('fileChooser', { static: false })
   fileChooser: ElementRef<HTMLInputElement>;
 
   private errorText: string;
   private dragCounter = 0;
 
-  constructor() {
-  }
+  constructor() {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   private handleFiles(files: FileList): void {
     console.log('[handleFiles]', files);
@@ -56,7 +58,8 @@ export class ImageSelectorComponent implements OnInit {
     this.errorText = '';
     const image = files[0];
     const reader = new FileReader();
-    reader.onload = (e) => this.image = (e.target as FileReader).result as string;
+    reader.onload = e =>
+      (this.image = (e.target as FileReader).result as string);
     reader.readAsDataURL(image);
     this.imageSelected.emit(image);
   }
@@ -109,5 +112,4 @@ export class ImageSelectorComponent implements OnInit {
   getError(): string {
     return this.errorText;
   }
-
 }

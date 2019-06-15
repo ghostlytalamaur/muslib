@@ -1,11 +1,12 @@
-@import "~@angular/material/theming";
-@import "variables";
-@import "mixins";
+@import '~@angular/material/theming';
+@import 'variables';
+@import 'mixins';
 
 @include mat-core();
 @include angular-material-theme($theme);
 
-html, body {
+html,
+body {
   height: 100%;
 }
 
@@ -15,7 +16,7 @@ html, body {
 
 body {
   margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
 }
 
 app-root {

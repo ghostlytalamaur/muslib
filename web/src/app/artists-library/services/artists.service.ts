@@ -16,7 +16,6 @@ interface FireArtist {
 
 @Injectable()
 export class ArtistsService extends BaseService<FireArtist, Artist> {
-
   private artists$: Observable<Artist[]>;
 
   constructor(
@@ -31,11 +30,14 @@ export class ArtistsService extends BaseService<FireArtist, Artist> {
 
   getArtists(): Observable<Artist[]> {
     if (!this.artists$) {
-      this.artists$ = this.getItems(Collections.ARTISTS, 300, (id, data, image$) => new Artist(id, data.name, image$))
-        .pipe(
-          publish(),
-          refCount()
-        );
+      this.artists$ = this.getItems(
+        Collections.ARTISTS,
+        300,
+        (id, data, image$) => new Artist(id, data.name, image$)
+      ).pipe(
+        publish(),
+        refCount()
+      );
     }
     return this.artists$;
   }
@@ -45,24 +47,23 @@ export class ArtistsService extends BaseService<FireArtist, Artist> {
   }
 
   addArtist(name: string, image?: File | string): Promise<string> {
-    return this.addItem(Collections.ARTISTS, {name}, image);
+    return this.addItem(Collections.ARTISTS, { name }, image);
   }
 
   getArtist(id: string): Observable<Artist> {
-    return this.getArtists()
-      .pipe(
-        map(artists => {
-          const artist = artists.find((a) => a.id === id);
-          if (artist) {
-            return artist;
-          } else {
-            throw new Error('Artist not found.');
-          }
-        })
-      );
+    return this.getArtists().pipe(
+      map(artists => {
+        const artist = artists.find(a => a.id === id);
+        if (artist) {
+          return artist;
+        } else {
+          throw new Error('Artist not found.');
+        }
+      })
+    );
   }
 
-// tslint:disable-next-line: typedef
+  // tslint:disable-next-line: typedef
   [Symbol.toStringTag]() {
     return 'Artist Service';
   }

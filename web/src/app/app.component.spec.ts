@@ -1,28 +1,21 @@
-import {async, TestBed} from '@angular/core/testing';
-import {RouterTestingModule} from '@angular/router/testing';
-import {AppComponent} from './app.component';
-import {MatProgressBarModule, MatToolbarModule} from '@angular/material';
-import {StatusService} from './services/status.service';
-import {NO_ERRORS_SCHEMA} from '@angular/core';
+import { async, TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
+import { AppComponent } from './app.component';
+import { MatProgressBarModule, MatToolbarModule } from '@angular/material';
+import { StatusService } from './services/status.service';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [
-        RouterTestingModule,
-        MatProgressBarModule,
-        MatToolbarModule
-      ],
+      imports: [RouterTestingModule, MatProgressBarModule, MatToolbarModule],
       declarations: [
         AppComponent
         // AppNavBarComponent
       ],
-      providers: [
-        StatusService
-      ],
+      providers: [StatusService],
       schemas: [NO_ERRORS_SCHEMA]
-    })
-      .compileComponents();
+    }).compileComponents();
   }));
 
   it('should create the app', () => {

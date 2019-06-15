@@ -1,8 +1,12 @@
-import {Inject, Injectable, InjectionToken, Optional} from '@angular/core';
-import {EMPTY, Observable, throwError} from 'rxjs';
-import {Album} from './models/album';
-import {HttpClient, HttpErrorResponse, HttpParams} from '@angular/common/http';
-import {catchError, map, publishReplay, refCount} from 'rxjs/operators';
+import { Inject, Injectable, InjectionToken, Optional } from '@angular/core';
+import { EMPTY, Observable, throwError } from 'rxjs';
+import { Album } from './models/album';
+import {
+  HttpClient,
+  HttpErrorResponse,
+  HttpParams
+} from '@angular/common/http';
+import { catchError, map, publishReplay, refCount } from 'rxjs/operators';
 
 export interface MusicBrainzConfig {
   baseUrl: string;
@@ -40,8 +44,12 @@ export class MusicBrainzService {
     }
   }
 
-  private getRequest<T, R>(url: string, params: HttpParams, mapper: (value: T) => R): Observable<R> {
-    return this.http.get<T>(url, {params}).pipe(
+  private getRequest<T, R>(
+    url: string,
+    params: HttpParams,
+    mapper: (value: T) => R
+  ): Observable<R> {
+    return this.http.get<T>(url, { params }).pipe(
       map(mapper, this),
       catchError(err => this.handleError(err)),
       publishReplay(1),
@@ -73,8 +81,13 @@ export class MusicBrainzService {
   }
 
   private buildAlbums(response: ReleaseGroupsResponse): Album[] {
-    return response['release-groups'].map((albumResponse) => {
-      return new Album(albumResponse.id, albumResponse.title, albumResponse.date, albumResponse['primary-type']);
+    return response['release-groups'].map(albumResponse => {
+      return new Album(
+        albumResponse.id,
+        albumResponse.title,
+        albumResponse.date,
+        albumResponse['primary-type']
+      );
     });
   }
 }

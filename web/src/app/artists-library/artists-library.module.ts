@@ -1,7 +1,17 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatButtonModule, MatCardModule, MatDialogModule, MatInputModule, MatMenuModule, MatPaginatorModule, MatProgressSpinnerModule, MatTableModule, MatToolbarModule } from '@angular/material';
+import {
+  MatButtonModule,
+  MatCardModule,
+  MatDialogModule,
+  MatInputModule,
+  MatMenuModule,
+  MatPaginatorModule,
+  MatProgressSpinnerModule,
+  MatTableModule,
+  MatToolbarModule
+} from '@angular/material';
 import { SharedModule } from '../shared/shared.module';
 import { AlbumCardComponent } from './album-card/album-card.component';
 import { AlbumListComponent } from './album-list/album-list.component';
@@ -27,10 +37,7 @@ import { HttpClientModule } from '@angular/common/http';
     NewAlbumDialogComponent,
     NewArtistDialogComponent
   ],
-  entryComponents: [
-    NewAlbumDialogComponent,
-    NewArtistDialogComponent
-  ],
+  entryComponents: [NewAlbumDialogComponent, NewArtistDialogComponent],
   imports: [
     CommonModule,
     HttpClientModule,
@@ -49,4 +56,4 @@ import { HttpClientModule } from '@angular/common/http';
     MatTableModule
   ]
 })
-export class ArtistsLibraryModule { }
+export class ArtistsLibraryModule {}

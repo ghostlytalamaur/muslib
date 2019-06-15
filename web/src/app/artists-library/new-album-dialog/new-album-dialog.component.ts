@@ -1,6 +1,6 @@
-import {Component, OnInit} from '@angular/core';
-import {MatDialogRef} from '@angular/material';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { MatDialogRef } from '@angular/material';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 interface FormValue {
   name: string;
@@ -19,14 +19,12 @@ export interface NewAlbumData {
   styleUrls: ['./new-album-dialog.component.scss']
 })
 export class NewAlbumDialogComponent implements OnInit {
-
   form: FormGroup;
   imageFile: File;
 
   constructor(
     private dialogRef: MatDialogRef<NewAlbumDialogComponent, NewAlbumData>
-  ) {
-  }
+  ) {}
 
   ngOnInit(): void {
     this.form = new FormGroup({
@@ -46,5 +44,4 @@ export class NewAlbumDialogComponent implements OnInit {
       image: this.imageFile
     });
   }
-
 }

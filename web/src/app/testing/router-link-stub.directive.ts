@@ -1,4 +1,4 @@
-import {Directive, HostListener, Input} from '@angular/core';
+import { Directive, HostListener, Input } from '@angular/core';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Directive({
@@ -6,7 +6,6 @@ import {Directive, HostListener, Input} from '@angular/core';
   selector: '[routerLink]'
 })
 export class RouterLinkStubDirective {
-
   @Input('routerLink')
   linkParams: string;
 

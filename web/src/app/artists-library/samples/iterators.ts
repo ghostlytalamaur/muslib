@@ -2,16 +2,15 @@ function range(start: number, count: number): Iterable<number> {
   class RangeIterator implements Iterator<number> {
     private readonly last: number;
 
-    constructor(private current: number,
-                private total: number) {
+    constructor(private current: number, private total: number) {
       this.last = current + total;
     }
 
     next(): IteratorResult<number> {
       if (this.current < this.last) {
-        return {done: false, value: this.current++};
+        return { done: false, value: this.current++ };
       } else {
-        return {done: true, value: undefined};
+        return { done: true, value: undefined };
       }
     }
   }
@@ -23,8 +22,11 @@ function range(start: number, count: number): Iterable<number> {
   };
 }
 
-function* rangeGenerator(start: number, count: number): IterableIterator<number> {
-  for (let i = start; i < (start + count); i++) {
+function* rangeGenerator(
+  start: number,
+  count: number
+): IterableIterator<number> {
+  for (let i = start; i < start + count; i++) {
     yield i;
   }
 }

@@ -1,5 +1,5 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Album} from '../../models/album';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Album } from '../../models/album';
 
 @Component({
   selector: 'app-album-card',
@@ -7,18 +7,15 @@ import {Album} from '../../models/album';
   styleUrls: ['./album-card.component.scss']
 })
 export class AlbumCardComponent implements OnInit {
-
   @Input()
   album: Album;
 
   @Output()
   deleteAlbum: EventEmitter<string> = new EventEmitter<string>();
 
-  constructor() {
-  }
+  constructor() {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   onDelete() {
     this.deleteAlbum.emit(this.album.id);
