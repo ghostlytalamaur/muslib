@@ -11,10 +11,6 @@ export class StatusService {
 
   startOperation(): void {
     this.operationCounter++;
-    console.log(
-      '[StatusService] startOperation(); operationCounter = ',
-      this.operationCounter
-    );
     if (this.operationCounter === 1) {
       this.isRunning.next(true);
     }
@@ -22,10 +18,6 @@ export class StatusService {
 
   endOperation(): void {
     this.operationCounter--;
-    console.log(
-      '[StatusService] endOperation(); operationCounter = ',
-      this.operationCounter
-    );
     if (this.operationCounter === 0) {
       this.isRunning.next(false);
     }

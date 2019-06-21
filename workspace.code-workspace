@@ -8,6 +8,12 @@
 		},
 		{
 			"path": "."
+		},
+		{
+			"path": "/home/crow/dev/angular/github/angular"
+		},
+		{
+			"path": "/home/crow/dev/angular/github/material2"
 		}
 	],
 	"settings": {}

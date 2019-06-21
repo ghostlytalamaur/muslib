@@ -4,6 +4,7 @@ import { from, Observable, of } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { MuslibApi } from 'src/server/api/server-api';
 import { AuthService } from '../../auth/auth.service';
+import { IdHolder } from '../../models/id-holder';
 import { StatusService } from '../../services/status.service';
 
 export class BaseService<T, R> {
@@ -22,6 +23,17 @@ export class BaseService<T, R> {
     size: string
   ): string {
     return `users/${userId}/${path}/${docId}/${docId}_${size}`;
+  }
+
+  protected async updateItem(
+    path: string,
+    item: Partial<T> & IdHolder
+  ): Promise<void> {
+    const userId = await this.getUserId();
+    return this.fireStore
+      .collection<T>(`users/${userId}/${path}`)
+      .doc<T>(item.id)
+      .update(item);
   }
 
   protected async addItem(
@@ -55,7 +67,6 @@ export class BaseService<T, R> {
     size: number,
     factory: (id: string, data: T, image$: Observable<string>) => R
   ): Observable<R[]> {
-    console.log(this);
     return this.authService.user$.pipe(
       switchMap(user => {
         return this.fireStore

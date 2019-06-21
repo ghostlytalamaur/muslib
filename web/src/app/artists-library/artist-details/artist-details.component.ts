@@ -1,21 +1,17 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatDialogConfig } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject, NEVER, Observable, Subject } from 'rxjs';
+import { catchError, map, publishReplay, refCount, switchMap, take, takeUntil } from 'rxjs/operators';
 import {
-  catchError,
-  map,
-  publishReplay,
-  refCount,
-  switchMap,
-  takeUntil
-} from 'rxjs/operators';
+  ListDialogComponent,
+  ListDialogData,
+  ListDialogResult
+} from 'src/app/shared/list-dialog/list-dialog.component';
+import { MuslibApi } from '../../../server/api/server-api';
 import { Album } from '../../models/album';
 import { Artist } from '../../models/artist';
-import {
-  NewAlbumData,
-  NewAlbumDialogComponent
-} from '../new-album-dialog/new-album-dialog.component';
+import { NewAlbumData, NewAlbumDialogComponent } from '../new-album-dialog/new-album-dialog.component';
 import { AlbumsService } from '../services/albums.service';
 import { ArtistsService } from '../services/artists.service';
 
@@ -35,8 +31,10 @@ export class ArtistDetailsComponent implements OnInit, OnDestroy {
     private artistsService: ArtistsService,
     private albumsService: AlbumsService,
     private route: ActivatedRoute,
-    private matDialog: MatDialog
-  ) {}
+    private matDialog: MatDialog,
+    private server: MuslibApi
+  ) {
+  }
 
   ngOnInit(): void {
     this.artistId$ = new BehaviorSubject<string>(undefined);
@@ -91,5 +89,34 @@ export class ArtistDetailsComponent implements OnInit, OnDestroy {
     this.albumsService
       .deleteAlbum(this.artistId$.value, albumId)
       .catch(() => (this.error = `Cannot delete album.`));
+  }
+
+  async selectMbid(): Promise<void> {
+    try {
+      const artist: Artist = await this.artist$.pipe(take(1)).toPromise();
+      const similarArtists = await this.server.mb.search({name: artist.name});
+      const selected = artist.mbid && similarArtists.artists.findIndex(a => artist.mbid === a.id);
+
+      const data: ListDialogData = {
+        title: 'Select Artist',
+        names: similarArtists.artists.map(a => a.name),
+        selected
+      };
+      const config: MatDialogConfig<ListDialogData> = {
+        minWidth: '500px',
+        data
+      };
+      this.matDialog.open<ListDialogComponent, ListDialogData, ListDialogResult>(ListDialogComponent, config)
+        .afterClosed()
+        .subscribe(result => {
+          if (result) {
+            const mbid = similarArtists.artists[result.selected].id;
+            this.artistsService.updateArtist({id: artist.id, mbid})
+              .catch((err) => console.error('Cannot link with MusicBrainZ', err));
+          }
+        });
+    } catch (err) {
+      console.error('Error in ArtistDetailsComponent.selectMbid()', err);
+    }
   }
 }
