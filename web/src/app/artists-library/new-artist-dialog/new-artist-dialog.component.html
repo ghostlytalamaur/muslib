@@ -14,7 +14,9 @@
             placeholder="Artist"
             matInput
             [(ngModel)]="artistData.name"
+            (ngModelChange)="nameChanged($event)"
             name="name"
+            [matAutocomplete]="similarArtists"
           />
         </label>
       </mat-form-field>
@@ -26,3 +28,8 @@
     <button mat-button mat-dialog-close type="button">Cancel</button>
   </div>
 </form>
+
+
+<mat-autocomplete #similarArtists>
+  <mat-option *ngFor="let similar of similarArtists$ | async" [value]="similar">{{similar}}</mat-option>
+</mat-autocomplete>

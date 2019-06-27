@@ -1,7 +1,8 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { take, tap } from 'rxjs/operators';
+import { take } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+import { MBApi } from './mb-api';
 
 async function readFile(file: File): Promise<ArrayBuffer> {
   return new Promise((resolve, reject) => {
@@ -57,67 +58,10 @@ class MuslibApiUploadHandler {
   }
 }
 
-interface MBSearchOptions {
-  name: string;
-}
-
-interface MBArtist {
-  id: string;
-  name: string;
-}
-
-interface ArtistSearchResult {
-  artists: MBArtist[];
-}
-
-function isMBArtist(artist: any): artist is MBArtist {
-  return artist && (typeof artist.id === 'string') &&
-    (typeof artist.name === 'string');
-}
-
-function isArrayOfMBArtist(arr: any): arr is Array<MBArtist> {
-  if (Array.isArray(arr)) {
-    const first = arr.length > 0 ? arr[0] : undefined;
-    return !first || isMBArtist(first);
-  } else {
-    return false;
-  }
-}
-
-function isValidArtistsSearchResult(response: ArtistSearchResult): response is ArtistSearchResult {
-  if (response && Array.isArray(response.artists)) {
-    return isArrayOfMBArtist(response.artists);
-  } else {
-    return false;
-  }
-}
-class MusicBrainzHandler {
-  constructor(private http: HttpClient) {
-  }
-
-  async search(options: MBSearchOptions): Promise<ArtistSearchResult> {
-    const url = `${environment.server.url}/search/artist`;
-    const params = new HttpParams()
-      .append('name', options.name);
-    const result = await this.http.get<ArtistSearchResult>(url, {params})
-      .pipe(
-        take(1),
-        tap(artists => {
-          if (!isValidArtistsSearchResult(artists)) {
-            throw new Error('Invalid server response');
-          }
-        })
-      )
-      .toPromise();
-    console.log('MusicBrainzHandler.search result', result);
-    return Promise.resolve(result);
-  }
-}
-
 @Injectable()
 export class MuslibApi {
   private uploadHandler: MuslibApiUploadHandler;
-  private mbHandler: MusicBrainzHandler;
+  private mMb2: MBApi;
 
   constructor(private http: HttpClient) {
   }
@@ -129,10 +73,10 @@ export class MuslibApi {
     return this.uploadHandler;
   }
 
-  get mb(): MusicBrainzHandler {
-    if (!this.mbHandler) {
-      this.mbHandler = new MusicBrainzHandler(this.http);
+  get mb2(): MBApi {
+    if (!this.mMb2) {
+      this.mMb2 = new MBApi(this.http);
     }
-    return this.mbHandler;
+    return this.mMb2;
   }
 }

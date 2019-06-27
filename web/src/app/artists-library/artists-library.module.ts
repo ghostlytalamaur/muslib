@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
+  MatAutocompleteModule,
   MatButtonModule,
   MatCardModule,
   MatDialogModule,
@@ -55,7 +56,8 @@ import { MuslibApiModule } from 'src/server/api/muslib-api.module';
     MatToolbarModule,
     MatDialogModule,
     MatTableModule,
-    MuslibApiModule
+    MuslibApiModule,
+    MatAutocompleteModule
   ]
 })
 export class ArtistsLibraryModule {}
