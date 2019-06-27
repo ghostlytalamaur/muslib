@@ -1,0 +1,8 @@
+@import '~@angular/material/theming';
+
+$primary: mat-palette($mat-gray);
+$accent: mat-palette($mat-blue-gray);
+$theme: mat-dark-theme($primary, $accent);
+
+$foreground: map-get($theme, foreground);
+$background: map-get($theme, background);

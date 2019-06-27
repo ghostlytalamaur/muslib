@@ -1,9 +1,0 @@
-<ng-container *ngIf="user$ | async as user; else errorTemplate">
-  <p class="user-name">User: {{ user.displayName }}</p>
-
-  <button (click)="logout()" mat-raised-button>Logout</button>
-</ng-container>
-
-<ng-template #errorTemplate>
-  <h1>No user signed in</h1>
-</ng-template>
