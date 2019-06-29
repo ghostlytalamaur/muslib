@@ -8,22 +8,24 @@ import { auth } from 'firebase/app';
 @Injectable()
 export class AuthService {
   readonly user$: Observable<User | null>;
-  private readonly mUser: BehaviorSubject<User | null>;
+  private readonly mUser: BehaviorSubject<User | null | undefined>;
 
   constructor(private readonly fireAuth: AngularFireAuth) {
-    this.mUser = new BehaviorSubject<User>(undefined);
+    this.mUser = new BehaviorSubject<User | null | undefined >(undefined);
+    // @ts-ignore
     this.user$ = this.mUser
       .asObservable()
-      .pipe(skipWhile(value => value === undefined));
+      .pipe(
+        skipWhile(value => value === undefined));
 
     this.fireAuth.user
       .pipe(
         distinctUntilChanged(
-          (x, y) => x && y && x.uid === y.uid && x.displayName === y.displayName
+          (x, y) => !!(x && y && x.uid === y.uid && x.displayName === y.displayName)
         ),
         map(u => {
           if (u) {
-            return new User(u.uid, u.displayName);
+            return new User(u.uid, u.displayName || '');
           } else {
             return null;
           }
@@ -37,10 +39,14 @@ export class AuthService {
   }
 
   get user(): User | null {
-    return this.mUser.value;
+    if (this.mUser.value !== undefined) {
+      return this.mUser.value;
+    } else {
+      return null;
+    }
   }
 
-  get idToken(): Observable<string> {
+  get idToken(): Observable<string | null> {
     return this.fireAuth.idToken;
   }
 

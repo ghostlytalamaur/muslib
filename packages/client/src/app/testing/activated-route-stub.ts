@@ -9,7 +9,11 @@ export class ActivatedRouteStub {
     this.setParamMap(initialParams);
   }
 
-  setParamMap(params: Params): void {
-    this.subject.next(convertToParamMap(params));
+  setParamMap(params?: Params): void {
+    if (params) {
+      this.subject.next(convertToParamMap(params));
+    } else {
+      this.subject.next(undefined);
+    }
   }
 }

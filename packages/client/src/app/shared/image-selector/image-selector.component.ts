@@ -51,7 +51,7 @@ export class ImageSelectorComponent implements OnInit {
 
     if (!isValidImage(files[0])) {
       this.errorText = 'Invalid file type';
-      this.imageSelected.emit(null);
+      this.imageSelected.emit(undefined);
       console.log('Error:', this.errorText);
       return;
     }
@@ -73,7 +73,9 @@ export class ImageSelectorComponent implements OnInit {
     if (!isInputElement(event.target)) {
       return;
     }
-    this.handleFiles(event.target.files);
+    if (event.target.files) {
+      this.handleFiles(event.target.files);
+    }
   }
 
   onDragOver(event: Event): void {
@@ -81,7 +83,7 @@ export class ImageSelectorComponent implements OnInit {
     event.preventDefault();
   }
 
-  onDragLeave(event: Event): void {
+  onDragLeave(): void {
     this.dragCounter--;
   }
 
@@ -95,7 +97,7 @@ export class ImageSelectorComponent implements OnInit {
     event.stopPropagation();
     event.preventDefault();
     this.dragCounter--;
-    if (event.dataTransfer.files.length === 0) {
+    if (!event.dataTransfer || event.dataTransfer.files.length === 0) {
       return;
     }
 
@@ -104,9 +106,9 @@ export class ImageSelectorComponent implements OnInit {
   }
 
   clearImage(): void {
-    this.fileChooser.nativeElement.value = null;
-    this.image = undefined;
-    this.imageSelected.emit(null);
+    this.fileChooser.nativeElement.value = '';
+    this.image = '';
+    this.imageSelected.emit(undefined);
   }
 
   getError(): string {

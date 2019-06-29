@@ -3,7 +3,7 @@
     class="image-300-container"
     (dragover)="onDragOver($event)"
     (dragenter)="onDragEnter($event)"
-    (dragleave)="onDragLeave($event)"
+    (dragleave)="onDragLeave()"
     (drop)="onDrop($event)"
     [ngClass]="{ drag: isDrag }"
   >

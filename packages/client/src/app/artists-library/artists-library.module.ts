@@ -14,7 +14,6 @@ import {
   MatToolbarModule
 } from '@angular/material';
 import { SharedModule } from '../shared/shared.module';
-import { AlbumCardComponent } from './album-card/album-card.component';
 import { AlbumListComponent } from './album-list/album-list.component';
 import { ArtistCardComponent } from './artist-card/artist-card.component';
 import { ArtistDetailsComponent } from './artist-details/artist-details.component';
@@ -35,7 +34,6 @@ import { MuslibApiModule } from 'src/server/api/muslib-api.module';
     ArtistsListComponent,
     ArtistDetailsComponent,
     AlbumListComponent,
-    AlbumCardComponent,
     NewAlbumDialogComponent,
     NewArtistDialogComponent
   ],

@@ -1,13 +1,8 @@
-import {
-  HttpInterceptor,
-  HttpRequest,
-  HttpEvent,
-  HttpHandler
-} from '@angular/common/http';
+import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 import { Injectable } from '@angular/core';
-import { map, switchMap } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 
 @Injectable()
@@ -21,9 +16,12 @@ export class AuthInterceptor implements HttpInterceptor {
     if (req.url.includes(environment.server.url)) {
       return this.authService.idToken.pipe(
         switchMap(idToken => {
-          const authReq = req.clone({
-            headers: req.headers.set('Authorization', `Bearer ${idToken}`)
-          });
+          let authReq = req;
+          if (idToken) {
+            authReq = req.clone({
+              headers: req.headers.set('Authorization', `Bearer ${idToken}`)
+            });
+          }
           return next.handle(authReq);
         })
       );

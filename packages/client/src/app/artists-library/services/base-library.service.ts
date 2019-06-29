@@ -39,7 +39,7 @@ export class BaseService<T, R> {
   protected async addItem(
     path: string,
     item: T,
-    image: File | string
+    image: File | string | undefined
   ): Promise<string> {
     const userId = await this.getUserId();
     const id = this.fireStore.createId();
@@ -51,12 +51,12 @@ export class BaseService<T, R> {
       .collection<T>(`users/${userId}/${path}`)
       .doc<T>(id)
       .set(item);
-    return Promise.resolve(id);
+    return id;
   }
 
   protected async deleteItem(path: string, id: string): Promise<void> {
     const userId = await this.getUserId();
-    return await this.fireStore
+    return this.fireStore
       .collection<T>(`users/${userId}/${path}`)
       .doc(id)
       .delete();
@@ -69,22 +69,26 @@ export class BaseService<T, R> {
   ): Observable<R[]> {
     return this.authService.user$.pipe(
       switchMap(user => {
-        return this.fireStore
-          .collection<T>(`users/${user.uid}/${path}`)
-          .snapshotChanges()
-          .pipe(
-            map(changes =>
-              changes.map(change => {
-                const id = change.payload.doc.id;
-                const data = change.payload.doc.data();
-                const image$ = this.getImageUrl(
-                  this.fireStorage,
-                  BaseService.getImageId(user.uid, path, id, size.toString())
-                );
-                return factory(id, data, image$);
-              })
-            )
-          );
+        if (user) {
+          return this.fireStore
+            .collection<T>(`users/${user.uid}/${path}`)
+            .snapshotChanges()
+            .pipe(
+              map(changes =>
+                changes.map(change => {
+                  const id = change.payload.doc.id;
+                  const data = change.payload.doc.data();
+                  const image$ = this.getImageUrl(
+                    this.fireStorage,
+                    BaseService.getImageId(user.uid, path, id, size.toString())
+                  );
+                  return factory(id, data, image$);
+                })
+              )
+            );
+        } else {
+          return of([]);
+        }
       })
     );
   }

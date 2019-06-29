@@ -38,7 +38,7 @@ export class ArtistDetailsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.artistId$ = new BehaviorSubject<string>(undefined);
+    this.artistId$ = new BehaviorSubject<string>('');
 
     this.route.paramMap
       .pipe(
@@ -46,7 +46,9 @@ export class ArtistDetailsComponent implements OnInit, OnDestroy {
         takeUntil(this.alive$)
       )
       .subscribe(id => {
-        this.artistId$.next(id);
+        if (id) {
+          this.artistId$.next(id);
+        }
       });
 
     this.artist$ = this.artistId$.pipe(
@@ -94,7 +96,10 @@ export class ArtistDetailsComponent implements OnInit, OnDestroy {
 
   selectMbid(): void {
     const selectId = (artist: Artist, similar: ArtistSearchResult): Observable<string> => {
-      const selected = artist.mbid && similar.artists.findIndex(a => artist.mbid === a.id);
+      let selected = -1;
+      if (artist.mbid) {
+        selected = similar.artists.findIndex(a => artist.mbid === a.id);
+      }
       const data: ListDialogData = {
         title: 'Select Artist',
         names: similar.artists.map(a => a.name),

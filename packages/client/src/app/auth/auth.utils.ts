@@ -2,7 +2,7 @@ import { catchError, map, take } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { AuthService } from './auth.service';
 
-export function isLoggedIn(srv: AuthService): Promise<Boolean> {
+export function isLoggedIn(srv: AuthService): Promise<boolean> {
   if (!srv) {
     return Promise.resolve(false);
   }
@@ -10,8 +10,8 @@ export function isLoggedIn(srv: AuthService): Promise<Boolean> {
     .pipe(
       take(1),
       map(user => !!user),
-      catchError(err => of(false))
+      catchError(_ => of(false))
     )
     .toPromise()
-    .catch(err => false);
+    .catch(_ => false);
 }

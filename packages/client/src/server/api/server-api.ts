@@ -7,7 +7,7 @@ import { MBApi } from './mb-api';
 async function readFile(file: File): Promise<ArrayBuffer> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
-    reader.onload = (ev: ProgressEvent) => {
+    reader.onload = (_: ProgressEvent) => {
       if (reader.result instanceof ArrayBuffer) {
         resolve(reader.result);
       } else {

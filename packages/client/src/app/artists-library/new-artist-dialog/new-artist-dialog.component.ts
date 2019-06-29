@@ -7,7 +7,7 @@ import { Artist } from '../../../server/api/mb-api';
 
 export interface NewArtistData {
   name: string;
-  image: File;
+  image: File | undefined;
 }
 
 function collectUniqueNames(artists: Artist[]): string[] {

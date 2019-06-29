@@ -38,7 +38,7 @@ export function LogMethod(options?: LogMethodOptions): MethodDecorator {
   };
 }
 
-export function LogConstructor<T extends { new (...args: any[]): {} }>(
+export function LogConstructor<T extends new (...args: any[]) => {}>(
   ctor: T
 ): any {
   // const Wrapper: any = function NewCTor(...args: any[]): any {

@@ -3,7 +3,7 @@
 
 $card_width: 300px;
 $title_width: $card_width - 36px - 16px;
-.mat-card {
+mat-card {
   @include mat-elevation-transition();
   @include mat-elevation(8);
 

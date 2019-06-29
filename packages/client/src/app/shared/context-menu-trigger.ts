@@ -1,3 +1,4 @@
+/* tslint:disable */
 /**
  * @license
  * Copyright Google LLC All Rights Reserved.
@@ -436,7 +437,7 @@ export class AppCtxMatMenuDirective implements AfterContentInit, OnDestroy {
     return this._overlayRef;
   }
 
-  private getPositionStrategy(pos: FlexibleConnectedPositionStrategyOrigin): FlexibleConnectedPositionStrategy {
+  private getPositionStrategy(pos?: FlexibleConnectedPositionStrategyOrigin): FlexibleConnectedPositionStrategy {
     return this._overlay
       .position()
       .flexibleConnectedTo(pos || this._element)
@@ -486,7 +487,7 @@ export class AppCtxMatMenuDirective implements AfterContentInit, OnDestroy {
    */
   private _setPosition(
     positionStrategy: FlexibleConnectedPositionStrategy,
-    pos: Point
+    pos?: Point
   ) {
     let [originX, originFallbackX]: HorizontalConnectionPos[] =
       this.menu.xPosition === 'before' ? ['end', 'start'] : ['start', 'end'];

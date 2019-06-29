@@ -1,12 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import {
-  NewAlbumData,
-  NewAlbumDialogComponent
-} from './new-album-dialog.component';
+import { NewAlbumData, NewAlbumDialogComponent } from './new-album-dialog.component';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { MatDialogRef } from '@angular/material';
-import { By } from '@angular/platform-browser';
 
 describe('NewAlbumDialogComponent', () => {
   let component: NewAlbumDialogComponent;
