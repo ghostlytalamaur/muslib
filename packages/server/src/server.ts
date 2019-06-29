@@ -1,8 +1,8 @@
-import express = require('express');
-import cors = require('cors');
-import dotenv = require('dotenv');
-import path = require('path');
-import bodyParser = require('body-parser');
+import express from 'express';
+import cors from 'cors';
+import * as dotenv from 'dotenv';
+import * as path from 'path';
+import * as bodyParser from 'body-parser';
 import { route as uploadRoute } from './routes/upload';
 import { route as mb } from './routes/mb';
 

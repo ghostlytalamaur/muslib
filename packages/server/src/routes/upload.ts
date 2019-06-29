@@ -1,9 +1,9 @@
-import express = require('express');
-import admin = require('firebase-admin');
-import fireStorage = require('@google-cloud/storage');
-import fs = require('fs');
-import request = require('request');
-import sharp = require('sharp');
+import { Router, Request, Response } from 'express';
+import admin from 'firebase-admin';
+import * as fireStorage from '@google-cloud/storage';
+import fs from 'fs';
+import request from 'request';
+import sharp from 'sharp';
 
 const fireApp = admin.initializeApp({
   storageBucket: 'muslib-8ec5b.appspot.com'
@@ -18,7 +18,7 @@ interface StorageDump {
   buckets: BucketDump[];
 }
 
-function dumpStorage(storage: fireStorage.Storage): Promise<StorageDump> {
+function dumpStorage(storage1: fireStorage.Storage): Promise<StorageDump> {
   function dumpBucket(bucket: fireStorage.Bucket): Promise<BucketDump> {
     return bucket.getFiles().then(files => {
       const fileNames = files[0].map(f => f.name);
@@ -32,7 +32,7 @@ function dumpStorage(storage: fireStorage.Storage): Promise<StorageDump> {
     });
   }
 
-  return storage
+  return storage1
     .getBuckets()
     .then(bucketsRes => {
       return Promise.all(dumpBuckets(bucketsRes[0]));
@@ -75,9 +75,9 @@ async function uploadImage(path: string, image: Buffer): Promise<Buffer> {
 // https://lastfm-img2.akamaized.net/i/u/ar0/d2fbaffb73bf1a0250ec0517f1587963
 
 const storage: fireStorage.Storage = new fireStorage.Storage();
-export const route = express.Router();
+export const route = Router();
 
-async function getImage(req: express.Request): Promise<Buffer> {
+async function getImage(req: Request): Promise<Buffer> {
   if (req.is('image/*')) {
     if (req.body) {
       return Promise.resolve(req.body);
@@ -94,20 +94,20 @@ function saveBuffer(image: Buffer, filePath: string): Promise<Buffer> {
   return Promise.resolve(image);
 }
 
-function getIdToken(req: express.Request): string {
+function getIdToken(req: Request): string {
   if (!req.headers.authorization) {
     throw Error('Authorization header missing');
   }
   const parts = req.headers.authorization.split(' ');
   console.log('idtoken parts', parts);
-  if (parts.length != 2) {
+  if (parts.length !== 2) {
     throw Error('Invalid authorization header');
   }
 
   return parts[1];
 }
 
-async function getUserId(req: express.Request): Promise<string> {
+async function getUserId(req: Request): Promise<string> {
   const useAuth = true;
   if (useAuth) {
     const decoded = await fireApp.auth().verifyIdToken(getIdToken(req));
@@ -117,13 +117,13 @@ async function getUserId(req: express.Request): Promise<string> {
   }
 }
 
-function buildImagePath(userId: string, path: string, suffix: string) {
+function buildImagePath(userId: string, path: string, suffix: string): string {
   return `users/${userId}/${path}_${suffix}`;
 }
 
 async function processUpload(
-  req: express.Request,
-  res: express.Response,
+  req: Request,
+  res: Response,
   path: string,
   sizes?: number[]
 ): Promise<void> {
@@ -132,12 +132,16 @@ async function processUpload(
     const image: Buffer = await getImage(req);
     const promises: Promise<any>[] = [];
     promises.push(uploadImage(buildImagePath(userId, path, 'main'), image));
-    for (let i = 0; i < sizes.length; i++) {
-      const resized: Buffer = await resizeImage(image, sizes[i]);
-      promises.push(
-        uploadImage(buildImagePath(userId, path, sizes[i].toString()), resized)
-      );
+
+    if (sizes) {
+      for (const size of sizes) {
+        const resized: Buffer = await resizeImage(image, size);
+        promises.push(
+          uploadImage(buildImagePath(userId, path, size.toString()), resized)
+        );
+      }
     }
+
     await Promise.all(promises);
     res.sendStatus(200);
   } catch (e) {

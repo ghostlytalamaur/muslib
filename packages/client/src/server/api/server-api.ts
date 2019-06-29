@@ -60,23 +60,19 @@ class MuslibApiUploadHandler {
 
 @Injectable()
 export class MuslibApi {
-  private uploadHandler: MuslibApiUploadHandler;
-  private mMb2: MBApi;
+  private readonly uploadHandler: MuslibApiUploadHandler;
+  private readonly mMb2: MBApi;
 
   constructor(private http: HttpClient) {
+    this.uploadHandler = new MuslibApiUploadHandler(this.http);
+    this.mMb2 = new MBApi(this.http);
   }
 
   get upload(): MuslibApiUploadHandler {
-    if (!this.uploadHandler) {
-      this.uploadHandler = new MuslibApiUploadHandler(this.http);
-    }
     return this.uploadHandler;
   }
 
   get mb2(): MBApi {
-    if (!this.mMb2) {
-      this.mMb2 = new MBApi(this.http);
-    }
     return this.mMb2;
   }
 }

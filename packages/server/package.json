@@ -1,16 +1,16 @@
 {
-    "name": "server",
+    "name": "@muslib/server",
     "version": "0.0.1",
     "private": true,
     "scripts": {
-        "start": "npm run serve",
-        "serve": "node dist/server/src/server.js",
-        "serve-debug": "nodemon --inspect dist/server/src/server.js",
+        "start": "yarn run serve",
+        "serve": "node ../../dist/@muslib/server/src/server.js",
+        "serve-debug": "nodemon --inspect ../../dist/@muslib/server/src/server.js",
         "build": "npm run build-ts",
         "build-ts": "tsc",
         "watch": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"cyan.bold,green.bold\" \"npm run watch-ts\" \"npm run watch-node\"",
         "watch-ts": "tsc -w",
-        "watch-node": "nodemon dist/server/src/server.js",
+        "watch-node": "nodemon ../../dist/@muslib/server/src/server.js",
         "watch-debug": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"cyan.bold,green.bold\" \"npm run watch-ts\" \"npm run serve-debug\"",
         "debug": "npm run build && npm run watch-debug"
     },

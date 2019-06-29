@@ -1,6 +1,10 @@
 {
   "private": true,
+  "name": "muslib",
   "workspaces": ["packages/*"],
+  "scripts": {
+    "start": "concurrently -k -p \"yarn workspace client start\" \"yarn workspace server start\""
+  },
   "dependencies": {
     "rxjs": "^6.4.0"
   },

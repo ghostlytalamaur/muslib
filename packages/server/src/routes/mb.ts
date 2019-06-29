@@ -1,38 +1,16 @@
 import { Request, Response, Router } from 'express';
-import { Observable, throwError, timer } from 'rxjs';
+import { Observable, Subscriber, throwError, timer } from 'rxjs';
 import { map, retryWhen, switchMap, take } from 'rxjs/internal/operators';
-import rq = require('request');
-
+import { ArtistSearchResult, ReleaseGroup, ReleaseGroupsResult, ReleaseType } from '@muslib/shared';
+import * as rq from 'request';
 
 export const route = Router();
-
-export interface Artist {
-  id: string;
-  name: string;
-}
-
-export interface ArtistSearchResult {
-  artists: Artist[];
-}
 
 interface ArtistSearchResponse {
   artists: {
     id: string;
     name: string;
   }[];
-}
-
-type ReleaseType = 'Album' | 'Single';
-
-interface ReleaseGroup {
-  id: string;
-  title: string;
-  date: string;
-  type: ReleaseType;
-}
-
-interface ReleaseGroupsResult {
-  releaseGroups: ReleaseGroup[];
 }
 
 interface ReleaseGroupResponse {
@@ -47,7 +25,7 @@ interface ReleaseGroupResponse {
 }
 
 interface ReleaseGroupsResponse {
-  'release-groups': ReleaseGroupResponse[]
+  'release-groups': ReleaseGroupResponse[];
 }
 
 function releaseGroupsResponseToResult(response: ReleaseGroupsResponse): ReleaseGroupsResult {
@@ -100,14 +78,15 @@ class RequestError extends Error {
 function getRequest<T>(request: rq.RequestAPI<rq.Request, rq.CoreOptions, rq.RequiredUriUrl>,
                        path: string,
                        options: rq.CoreOptions): Observable<T> {
-  return new Observable<T>(function(this, subscriber): Teardown {
+  return new Observable<T>(function(this: Observable<T>, subscriber: Subscriber<T>): Teardown {
     const req = request.get(path, options, (err, res, body): void => {
       if (err) {
         subscriber.error(err);
       } else if (res.statusCode === 503) {
-        let msg: string;
-        if (res && typeof res.body === 'string')
+        let msg = '';
+        if (res && typeof res.body === 'string') {
           msg = res.body;
+        }
         subscriber.error(new RequestError(res.statusCode, msg));
       } else {
         subscriber.next(body);
@@ -127,8 +106,6 @@ interface RequestParams {
 
 export class MBApi {
 
-  private request: rq.RequestAPI<rq.Request, rq.CoreOptions, rq.RequiredUriUrl>;
-
   constructor() {
     this.request = rq.defaults({
       baseUrl: config.endpoint,
@@ -137,6 +114,12 @@ export class MBApi {
         'User-Agent': `${config.appName}/${config.appVersion} ( ${config.appMail} )`
       }
     });
+  }
+
+  private request: rq.RequestAPI<rq.Request, rq.CoreOptions, rq.RequiredUriUrl>;
+
+  private static makeSearchQueryString(fields: { [key: string]: string }): string {
+    return Object.keys(fields).map(key => `${key}:${fields[key]}`).join(' AND ');
   }
 
   private get<T>(path: string, params: RequestParams): Observable<T> {
@@ -182,10 +165,6 @@ export class MBApi {
       .pipe(
         map(response => releaseGroupsResponseToResult(response))
       );
-  }
-
-  private static makeSearchQueryString(fields: { [key: string]: string }): string {
-    return Object.keys(fields).map(key => `${key}:${fields[key]}`).join(' AND ');
   }
 }
 
