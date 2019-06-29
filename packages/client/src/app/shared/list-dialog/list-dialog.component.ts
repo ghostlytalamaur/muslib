@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 
-export interface ListDialogData {
+export class ListDialogData {
   title: string;
   names: string[];
   selected: number;
