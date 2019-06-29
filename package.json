@@ -3,7 +3,8 @@
   "name": "muslib",
   "workspaces": ["packages/*"],
   "scripts": {
-    "start": "concurrently -k -p \"yarn workspace client start\" \"yarn workspace server start\""
+    "start": "concurrently -k -p \"[{name}]\" -n \"Client,Server\" -c \"green.bold,blue.bold\" \"yarn workspace @muslib/client start\" \"yarn workspace @muslib/server start\"",
+    "watch": "concurrently -k -p \"[{name}]\" -n \"Client,Server\" -c \"green.bold,blue.bold\" \"yarn workspace @muslib/client start\" \"yarn workspace @muslib/server watch\""
   },
   "dependencies": {
     "rxjs": "^6.4.0"

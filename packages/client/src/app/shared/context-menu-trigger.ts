@@ -48,6 +48,7 @@ import {
   MenuPositionX,
   MenuPositionY
 } from '@angular/material';
+import { FlexibleConnectedPositionStrategyOrigin } from '@angular/cdk/typings/overlay/position/flexible-connected-position-strategy';
 
 /** Injection token that determines the scroll handling while the menu is open. */
 export const MAT_MENU_SCROLL_STRATEGY = new InjectionToken<
@@ -435,7 +436,7 @@ export class AppCtxMatMenuDirective implements AfterContentInit, OnDestroy {
     return this._overlayRef;
   }
 
-  private getPositionStrategy(pos) {
+  private getPositionStrategy(pos: FlexibleConnectedPositionStrategyOrigin): FlexibleConnectedPositionStrategy {
     return this._overlay
       .position()
       .flexibleConnectedTo(pos || this._element)

@@ -1,5 +1,5 @@
 import {
-  animate,
+  animate, AnimationTriggerMetadata,
   group,
   query,
   style,
@@ -7,29 +7,29 @@ import {
   trigger
 } from '@angular/animations';
 
-export const fadeAnimation = trigger('fadeAnimation', [
-  transition('* => *', [
-    query(':enter', [style({ opacity: 0 })], { optional: true }),
-    query(
-      ':leave',
-      [
-        style({ opacity: 1 }),
-        animate('0.1s 0s ease-in-out', style({ opacity: 0 }))
-      ],
-      { optional: true }
-    ),
-    query(
-      ':enter',
-      [
-        style({ opacity: 0 }),
-        animate('0.1s 0s ease-in-out', style({ opacity: 1 }))
-      ],
-      { optional: true }
-    )
-  ])
-]);
-
-export const routerAnimation = trigger('routerAnimation', [
+// export const fadeAnimation = trigger('fadeAnimation', [
+//   transition('* => *', [
+//     query(':enter', [style({ opacity: 0 })], { optional: true }),
+//     query(
+//       ':leave',
+//       [
+//         style({ opacity: 1 }),
+//         animate('0.1s 0s ease-in-out', style({ opacity: 0 }))
+//       ],
+//       { optional: true }
+//     ),
+//     query(
+//       ':enter',
+//       [
+//         style({ opacity: 0 }),
+//         animate('0.1s 0s ease-in-out', style({ opacity: 1 }))
+//       ],
+//       { optional: true }
+//     )
+//   ])
+// ]);
+//
+export const routerAnimation: AnimationTriggerMetadata = trigger('routerAnimation', [
   transition('* <=> *', [
     group([
       query(

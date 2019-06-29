@@ -12,6 +12,7 @@
       "dom"
     ],
     "paths": {
+      "@angular/*": ["../../node_modules/@angular"],
       "@muslib/shared": [
         "../shared"
       ]
