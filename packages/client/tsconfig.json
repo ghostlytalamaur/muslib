@@ -12,7 +12,7 @@
     ],
     "paths": {
       "@angular/*": ["../../node_modules/@angular"],
-      "@muslib/shared": [
+      "muslib/shared": [
         "../shared"
       ]
     }

@@ -1,7 +1,7 @@
 import { Request, Response, Router } from 'express';
 import { Observable, Subscriber, throwError, timer } from 'rxjs';
 import { map, retryWhen, switchMap, take } from 'rxjs/internal/operators';
-import { ArtistSearchResult, ReleaseGroup, ReleaseGroupsResult, ReleaseType } from '@muslib/shared';
+import { ArtistSearchResult, ReleaseGroup, ReleaseGroupsResult, ReleaseType } from 'muslib/shared';
 import * as rq from 'request';
 
 export const route = Router();

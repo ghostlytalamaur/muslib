@@ -3,7 +3,7 @@
 // The list of file replacements can be found in `angular.json`.
 
 
-import { sharedEnvironment } from '@muslib/shared';
+import { sharedEnvironment } from 'muslib/shared';
 
 export const environment = {
   production: false,

@@ -4,7 +4,7 @@ import * as fireStorage from '@google-cloud/storage';
 import fs from 'fs';
 import request from 'request';
 import sharp from 'sharp';
-import { sharedEnvironment } from '@muslib/shared';
+import { sharedEnvironment } from 'muslib/shared';
 
 const fireApp = admin.initializeApp({
   storageBucket: sharedEnvironment.firebase.storageBucket
