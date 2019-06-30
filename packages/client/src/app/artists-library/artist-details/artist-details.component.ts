@@ -14,7 +14,7 @@ import { Artist } from '../../models/artist';
 import { NewAlbumData, NewAlbumDialogComponent } from '../new-album-dialog/new-album-dialog.component';
 import { AlbumsService } from '../services/albums.service';
 import { ArtistsService } from '../services/artists.service';
-import { ArtistSearchResult } from '../../../server/api/mb-api';
+import { ArtistSearchResult } from '@muslib/shared';
 
 @Component({
   selector: 'app-artist-details',

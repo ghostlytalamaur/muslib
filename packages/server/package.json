@@ -4,7 +4,7 @@
     "private": true,
     "scripts": {
         "start": "yarn run serve",
-        "serve": "node ../../dist/@muslib/server/src/server.js",
+        "serve": "node ../../dist/@muslib/server/server/src/server.js",
         "serve-debug": "nodemon --inspect --watch ../../dist/@muslib/server",
         "build": "yarn run build-ts",
         "build-ts": "tsc",

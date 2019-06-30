@@ -2,15 +2,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
+import { ArtistSearchResult } from '@muslib/shared';
 
-export interface Artist {
-  id: string;
-  name: string;
-}
-
-export interface ArtistSearchResult {
-  artists: Artist[];
-}
 
 @Injectable()
 export class MBApi {

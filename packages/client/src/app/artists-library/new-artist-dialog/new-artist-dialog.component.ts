@@ -3,7 +3,7 @@ import { MatDialogRef } from '@angular/material';
 import { MuslibApi } from '../../../server/api/server-api';
 import { EMPTY, Observable, Subject } from 'rxjs';
 import { catchError, delay, distinctUntilChanged, map, switchMap } from 'rxjs/operators';
-import { Artist } from '../../../server/api/mb-api';
+import { Artist } from '@muslib/shared';
 
 export interface NewArtistData {
   name: string;

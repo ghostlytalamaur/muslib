@@ -2,7 +2,10 @@
   "extends": "../tsconfig.json",
   "compilerOptions": {
     "baseUrl": ".",
-    "rootDir": ".",
+    "rootDirs": [
+      ".",
+      "../shared"
+    ],
     "outDir": "../../dist/@muslib/server",
     "module": "commonjs",
     /* Enables emit interoperability between CommonJS and ES Modules via creation of namespace objects for all imports. Implies 'allowSyntheticDefaultImports'. */
@@ -11,8 +14,8 @@
       "es2015"
     ],
     "paths": {
-      "@muslib/shared/*": [
-        "../shared/*"
+      "@muslib/shared": [
+        "../shared"
       ],
       "*": [
         "node_modules/*",

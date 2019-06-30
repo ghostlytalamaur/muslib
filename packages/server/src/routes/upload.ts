@@ -4,9 +4,10 @@ import * as fireStorage from '@google-cloud/storage';
 import fs from 'fs';
 import request from 'request';
 import sharp from 'sharp';
+import { sharedEnvironment } from '@muslib/shared';
 
 const fireApp = admin.initializeApp({
-  storageBucket: 'muslib-8ec5b.appspot.com'
+  storageBucket: sharedEnvironment.firebase.storageBucket
 });
 
 interface BucketDump {
@@ -86,7 +87,7 @@ async function getImage(req: Request): Promise<Buffer> {
     return requestBuffer(req.body.url);
   }
 
-  return Promise.reject(new Error('Unsupported request type'));
+  throw new Error('Unsupported request type');
 }
 
 function saveBuffer(image: Buffer, filePath: string): Promise<Buffer> {
