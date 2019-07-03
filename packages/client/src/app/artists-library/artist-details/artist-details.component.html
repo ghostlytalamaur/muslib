@@ -36,14 +36,14 @@
       <th *matHeaderCellDef mat-header-cell>Year</th>
       <td *matCellDef="let album" mat-cell>{{ album.year }}</td>
     </ng-container>
-    <ng-container matColumnDef="name">
+    <ng-container matColumnDef="title">
       <th *matHeaderCellDef mat-header-cell>Album</th>
-      <td *matCellDef="let album" mat-cell>{{ album.name }}</td>
+      <td *matCellDef="let album" mat-cell>{{ album.title }}</td>
     </ng-container>
 
-    <tr *matHeaderRowDef="['image', 'year', 'name']" mat-header-row></tr>
+    <tr *matHeaderRowDef="['image', 'year', 'title']" mat-header-row></tr>
     <tr
-      *matRowDef="let row; columns: ['image', 'year', 'name']; let album"
+      *matRowDef="let row; columns: ['image', 'year', 'title']; let album"
       [appCtxMatMenuTriggerFor]="menu"
       [matMenuTriggerData]="{ album: album }"
       mat-row

@@ -7,7 +7,7 @@ export class Album {
   constructor(
     readonly id: string,
     readonly year: number,
-    readonly name: string,
+    readonly title: string,
     image: Observable<string>,
     readonly artistId: string
   ) {
