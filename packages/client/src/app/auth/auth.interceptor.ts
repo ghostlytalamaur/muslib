@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 import { Injectable } from '@angular/core';
 import { switchMap } from 'rxjs/operators';
-import { environment } from 'src/environments/environment';
+import { sharedEnvironment } from 'muslib/shared';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
@@ -13,7 +13,7 @@ export class AuthInterceptor implements HttpInterceptor {
     req: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
-    if (req.url.includes(environment.server.url)) {
+    if (req.url.includes(sharedEnvironment.server.url)) {
       return this.authService.idToken.pipe(
         switchMap(idToken => {
           let authReq = req;

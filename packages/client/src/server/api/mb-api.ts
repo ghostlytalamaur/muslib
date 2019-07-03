@@ -1,8 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
-import { environment } from '../../environments/environment';
-import { ArtistSearchResult } from 'muslib/shared';
+import { ArtistSearchResult, ReleaseGroupsResult, sharedEnvironment } from 'muslib/shared';
 
 
 @Injectable()
@@ -12,9 +11,16 @@ export class MBApi {
   }
 
   searchArtist(name: string): Observable<ArtistSearchResult> {
-    const url = `${environment.server.url}/search/artist`;
+    const url = `${sharedEnvironment.server.url}/search/artist`;
     const params = new HttpParams()
       .set('name', name);
     return this.http.get<ArtistSearchResult>(url, { params });
+  }
+
+  releaseGroups(artistId: string): Observable<ReleaseGroupsResult> {
+    const url = `${sharedEnvironment.server.url}/mb/release-group`;
+    const params = new HttpParams()
+      .set('artistId', artistId);
+    return this.http.get<ReleaseGroupsResult>(url, { params });
   }
 }

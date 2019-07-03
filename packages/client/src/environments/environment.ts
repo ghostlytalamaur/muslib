@@ -7,9 +7,6 @@ import { sharedEnvironment } from 'muslib/shared';
 
 export const environment = {
   production: false,
-  server: {
-    url: 'http://localhost:3000'
-  },
   firebase: sharedEnvironment.firebase
 };
 

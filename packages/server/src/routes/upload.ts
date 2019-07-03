@@ -1,9 +1,9 @@
 import { Router, Request, Response } from 'express';
-import admin from 'firebase-admin';
+import * as admin from 'firebase-admin';
 import * as fireStorage from '@google-cloud/storage';
-import fs from 'fs';
-import request from 'request';
-import sharp from 'sharp';
+import * as fs from 'fs';
+import * as request from 'request';
+import * as sharp from 'sharp';
 import { sharedEnvironment } from 'muslib/shared';
 
 const fireApp = admin.initializeApp({

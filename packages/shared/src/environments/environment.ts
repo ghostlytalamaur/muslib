@@ -3,6 +3,13 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const sharedEnvironment = {
+  server: {
+    host: 'localhost',
+    port: 3000,
+    get url(): string {
+      return `http://${this.host}:${this.port}`;
+    }
+  },
   firebase: {
     apiKey: 'AIzaSyAfk3uOTDs94m4Wql1GkAEaoloWMNpY25w',
     authDomain: 'muslib-8ec5b.firebaseapp.com',

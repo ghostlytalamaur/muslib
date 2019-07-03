@@ -88,6 +88,8 @@ function getRequest<T>(request: rq.RequestAPI<rq.Request, rq.CoreOptions, rq.Req
           msg = res.body;
         }
         subscriber.error(new RequestError(res.statusCode, msg));
+      } else if (res.statusCode !== 200) {
+        subscriber.error(new Error(JSON.stringify(res.body)));
       } else {
         subscriber.next(body);
         subscriber.complete();
@@ -175,7 +177,7 @@ function processRequestObservable<T>(req: Request, res: Response, data: Observab
     .subscribe(
       (result) => res.status(200).json(result),
       (err) => {
-        console.log('Cannot search artist', err);
+        console.log('Cannot process request', err.message);
         res.status(500).json(err);
       }
     );

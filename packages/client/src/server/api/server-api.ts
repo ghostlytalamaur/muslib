@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { take } from 'rxjs/operators';
-import { environment } from 'src/environments/environment';
 import { MBApi } from './mb-api';
+import { sharedEnvironment } from 'muslib/shared';
 
 async function readFile(file: File): Promise<ArrayBuffer> {
   return new Promise((resolve, reject) => {
@@ -28,7 +28,7 @@ class MuslibApiUploadHandler {
 
   async image(path: string, image: File): Promise<void> {
     const content = await readFile(image);
-    const url = environment.server.url + '/images/' + path;
+    const url = sharedEnvironment.server.url + '/images/' + path;
     try {
       await this.http
         .post(url, content, {
@@ -43,7 +43,7 @@ class MuslibApiUploadHandler {
   }
 
   async url(path: string, imageUrl: string): Promise<void> {
-    const url = environment.server.url + '/images/' + path;
+    const url = sharedEnvironment.server.url + '/images/' + path;
     try {
       console.log(`Upload image from ${imageUrl} to ${path}`);
       await this.http

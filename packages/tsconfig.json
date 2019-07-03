@@ -31,7 +31,7 @@
 
     /* Enable strict null checks. */
     "strictNullChecks": true,
-
+    "resolveJsonModule": true,
     /* Enable strict checking of property initialization in classes. */
     "strictPropertyInitialization": false,
 
