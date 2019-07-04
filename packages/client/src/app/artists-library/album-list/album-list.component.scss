@@ -1,0 +1,21 @@
+@import '~@angular/material/theming';
+@import '~src/styles/variables';
+
+.albums-table {
+  width: 100%;
+
+  .mat-row {
+    &:hover {
+      background-color: mat-color($background, hover);
+    }
+  }
+
+  td {
+    img {
+      height: 48px;
+      width: 48px;
+      object-fit: contain;
+      background-color: black;
+    }
+  }
+}

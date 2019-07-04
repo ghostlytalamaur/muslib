@@ -23,4 +23,11 @@ export class MBApi {
       .set('artistId', artistId);
     return this.http.get<ReleaseGroupsResult>(url, { params });
   }
+
+  coverArt(releaseGroup: string, id: string): Observable<string> {
+    const url = `${sharedEnvironment.server.url}/mb/coverart/release-group`;
+    const params = new HttpParams()
+      .set('id', id);
+    return this.http.get<string>(url, { params });
+  }
 }

@@ -1,7 +1,7 @@
 import { Request, Response, Router } from 'express';
 import { Observable, Subscriber, throwError, timer } from 'rxjs';
 import { map, retryWhen, switchMap, take } from 'rxjs/internal/operators';
-import { ArtistSearchResult, ReleaseGroup, ReleaseGroupsResult, ReleaseType } from 'muslib/shared';
+import { ArtistSearchResult, compareByYear, ReleaseGroup, ReleaseGroupsResult, ReleaseType } from 'muslib/shared';
 import * as rq from 'request';
 
 export const route = Router();
@@ -28,17 +28,22 @@ interface ReleaseGroupsResponse {
   'release-groups': ReleaseGroupResponse[];
 }
 
-function releaseGroupsResponseToResult(response: ReleaseGroupsResponse): ReleaseGroupsResult {
-  return {
-    releaseGroups: response['release-groups'].map<ReleaseGroup>((g) => {
-      return {
-        id: g.id,
-        title: g.title,
-        date: g['first-release-date'],
-        type: g['primary-type']
-      };
-    })
-  };
+interface CoverArtResponse {
+  images: {
+    edit: number,
+    id: number,
+    image: string,
+    thumbnails: { [key: string]: string },
+    comment: string;
+    approved: boolean,
+    front: boolean,
+    types: string[],
+    back: boolean
+  }[];
+}
+
+function extractYear(date: string): number {
+  return new Date(date).getFullYear();
 }
 
 function artistSearchResponseToResult(response: ArtistSearchResponse): ArtistSearchResult {
@@ -72,24 +77,19 @@ class RequestError extends Error {
   constructor(code: number, message: string) {
     super(message);
     this.code = code;
+    Object.setPrototypeOf(this, RequestError.prototype);
   }
 }
 
 function getRequest<T>(request: rq.RequestAPI<rq.Request, rq.CoreOptions, rq.RequiredUriUrl>,
                        path: string,
-                       options: rq.CoreOptions): Observable<T> {
+                       options?: rq.CoreOptions): Observable<T> {
   return new Observable<T>(function(this: Observable<T>, subscriber: Subscriber<T>): Teardown {
     const req = request.get(path, options, (err, res, body): void => {
       if (err) {
         subscriber.error(err);
-      } else if (res.statusCode === 503) {
-        let msg = '';
-        if (res && typeof res.body === 'string') {
-          msg = res.body;
-        }
-        subscriber.error(new RequestError(res.statusCode, msg));
       } else if (res.statusCode !== 200) {
-        subscriber.error(new Error(JSON.stringify(res.body)));
+        subscriber.error(new RequestError(res.statusCode, JSON.stringify(res.body)));
       } else {
         subscriber.next(body);
         subscriber.complete();
@@ -114,11 +114,21 @@ export class MBApi {
       timeout: 20 * 1000,
       headers: {
         'User-Agent': `${config.appName}/${config.appVersion} ( ${config.appMail} )`
-      }
+      },
+      json: true
+    });
+    this.coverArt = rq.defaults({
+      baseUrl: 'https://coverartarchive.org',
+      timeout: 20 * 1000,
+      headers: {
+        'User-Agent': `${config.appName}/${config.appVersion} ( ${config.appMail} )`
+      },
+      json: true
     });
   }
 
   private request: rq.RequestAPI<rq.Request, rq.CoreOptions, rq.RequiredUriUrl>;
+  private coverArt: rq.RequestAPI<rq.Request, rq.CoreOptions, rq.RequiredUriUrl>;
 
   private static makeSearchQueryString(fields: { [key: string]: string }): string {
     return Object.keys(fields).map(key => `${key}:${fields[key]}`).join(' AND ');
@@ -127,10 +137,8 @@ export class MBApi {
   private get<T>(path: string, params: RequestParams): Observable<T> {
     const options: rq.CoreOptions = {
       qs: {
-        ...params,
-        fmt: 'json'
-      },
-      json: true
+        ...params
+      }
     };
 
     return getRequest<T>(this.request, path, options)
@@ -155,6 +163,20 @@ export class MBApi {
     return this.get<T>(`/${entity}`, { query: MBApi.makeSearchQueryString(fields) });
   }
 
+  releaseGroupsResponseToResult(response: ReleaseGroupsResponse): ReleaseGroupsResult {
+    return {
+      releaseGroups: response['release-groups'].map<ReleaseGroup>((g) => {
+        return {
+          id: g.id,
+          title: g.title,
+          year: extractYear(g['first-release-date']),
+          type: g['primary-type']
+        };
+      })
+        .sort(compareByYear.compare)
+    };
+  }
+
   searchArtist(name: string): Observable<ArtistSearchResult> {
     return this.search<ArtistSearchResponse>('artist', { sortname: name })
       .pipe(
@@ -163,10 +185,23 @@ export class MBApi {
   }
 
   getReleaseGroups(artistId: string): Observable<ReleaseGroupsResult> {
-    return this.get<ReleaseGroupsResponse>('release-group', { artist: artistId })
+    return this.get<ReleaseGroupsResponse>('/release-group', { artist: artistId })
       .pipe(
-        map(response => releaseGroupsResponseToResult(response))
+        map(response => this.releaseGroupsResponseToResult(response))
       );
+  }
+
+  getCoverArt(type: 'release' | 'release-group', id: string): Observable<string> {
+    function extractImage(data: CoverArtResponse): string {
+      if (data && Array.isArray(data.images) && data.images.length > 0) {
+        return data.images[0].image;
+      }
+      throw Error(`Cannot extract cover art from response for ${type} ${id}`);
+    }
+
+    return getRequest<CoverArtResponse>(this.coverArt, `/${type}/${id}`).pipe(
+      map(extractImage)
+    );
   }
 }
 
@@ -177,8 +212,13 @@ function processRequestObservable<T>(req: Request, res: Response, data: Observab
     .subscribe(
       (result) => res.status(200).json(result),
       (err) => {
-        console.log('Cannot process request', err.message);
-        res.status(500).json(err);
+        if (err instanceof RequestError) {
+          console.error('Request error. Code = ', err.code, '\n', err);
+          res.status(err.code).json(err.message);
+        } else {
+          console.error(err);
+          res.status(500).json(err);
+        }
       }
     );
 
@@ -191,4 +231,8 @@ route.get('/search/artist', async (req, res) => {
 
 route.get('/mb/release-group', async (req, res) => {
   processRequestObservable(req, res, api.getReleaseGroups(req.query.artistId));
+});
+
+route.get('/mb/coverart/release-group', async (req, res) => {
+  processRequestObservable(req, res, api.getCoverArt('release-group', req.query.id));
 });

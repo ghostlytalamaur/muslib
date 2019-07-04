@@ -10,7 +10,7 @@ import {
   MatMenuModule,
   MatPaginatorModule,
   MatProgressSpinnerModule,
-  MatTableModule,
+  MatTableModule, MatTabsModule,
   MatToolbarModule
 } from '@angular/material';
 import { SharedModule } from '../shared/shared.module';
@@ -55,7 +55,8 @@ import { MuslibApiModule } from 'src/server/api/muslib-api.module';
     MatDialogModule,
     MatTableModule,
     MuslibApiModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    MatTabsModule
   ]
 })
 export class ArtistsLibraryModule {}

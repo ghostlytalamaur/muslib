@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
+import { Album } from '../../models/album';
 
 @Component({
   selector: 'app-album-list',
@@ -6,6 +8,10 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./album-list.component.scss']
 })
 export class AlbumListComponent implements OnInit {
+
+  @Input()
+  albums: Album[];
+
   constructor() {}
 
   ngOnInit(): void {}

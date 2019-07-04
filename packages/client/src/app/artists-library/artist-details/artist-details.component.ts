@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
-import { BehaviorSubject, NEVER, Observable, Subject } from 'rxjs';
-import { catchError, map, publishReplay, refCount, switchMap, take, takeUntil } from 'rxjs/operators';
+import { BehaviorSubject, NEVER, Observable, of, Subject } from 'rxjs';
+import { catchError, map, mergeMap, publishReplay, refCount, switchMap, take, takeUntil } from 'rxjs/operators';
 import {
   ListDialogComponent,
   ListDialogData,
@@ -24,6 +24,7 @@ import { ArtistSearchResult } from 'muslib/shared';
 export class ArtistDetailsComponent implements OnInit, OnDestroy {
   artist$: Observable<Artist>;
   albums$: Observable<Album[]>;
+  favoriteAlbums$: Observable<Album[]>;
   private alive$: Subject<boolean> = new Subject<boolean>();
   private artistId$: BehaviorSubject<string>;
   private error: string;
@@ -60,6 +61,27 @@ export class ArtistDetailsComponent implements OnInit, OnDestroy {
     );
 
     this.albums$ = this.artist$.pipe(
+      switchMap(artist => {
+        if (artist.mbid) {
+          return this.server.mb2.releaseGroups(artist.mbid);
+        } else {
+          throw new Error();
+        }
+      }),
+      map(groups => {
+        console.log(groups);
+        return groups.releaseGroups.map(group => {
+          console.log(group.title);
+          return new Album(group.id, group.year, group.title, this.server.mb2.coverArt('release-group', group.id), '');
+        });
+      }),
+      catchError(err => {
+        console.log('Cannot get release groups', err);
+        return of([]);
+      })
+    );
+
+    this.favoriteAlbums$ = this.artist$.pipe(
       switchMap(artist => this.albumsService.getAlbums(artist.id)),
       catchError(err => {
         console.log('GetAlbums error', err);
