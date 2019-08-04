@@ -11,7 +11,7 @@ export class MBApi {
   }
 
   searchArtist(name: string): Observable<ArtistSearchResult> {
-    const url = `${sharedEnvironment.server.url}/search/artist`;
+    const url = `${sharedEnvironment.server.url}/mb/search/artist`;
     const params = new HttpParams()
       .set('name', name);
     return this.http.get<ArtistSearchResult>(url, { params });
@@ -28,6 +28,6 @@ export class MBApi {
     const url = `${sharedEnvironment.server.url}/mb/coverart/release-group`;
     const params = new HttpParams()
       .set('id', id);
-    return this.http.get<string>(url, { params });
+    return this.http.get(url, { params, responseType: 'text' });
   }
 }

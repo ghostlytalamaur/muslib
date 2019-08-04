@@ -20,11 +20,11 @@
   </ng-container>
 
   <mat-tab-group>
-    <mat-tab label="Favorite">
-      <app-album-list [albums]="favoriteAlbums$ | async"></app-album-list>
-    </mat-tab>
     <mat-tab label="Albums">
       <app-album-list [albums]="albums$ | async"></app-album-list>
+    </mat-tab>
+    <mat-tab label="Favorite">
+      <app-album-list [albums]="favoriteAlbums$ | async"></app-album-list>
     </mat-tab>
   </mat-tab-group>
 </div>
