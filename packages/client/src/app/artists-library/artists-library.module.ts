@@ -24,6 +24,8 @@ import { MuslibApiModule } from 'src/server/api/muslib-api.module';
 import { NewArtistDialogComponent } from './new-artist-dialog/new-artist-dialog.component';
 import { ArtistDetailsComponent } from './artist-details/artist-details.component';
 import { AlbumListComponent } from './album-list/album-list.component';
+import { StoreModule } from '@ngrx/store';
+import * as fromMuslib from './store/ngrx/muslib.reducer';
 
 @NgModule({
   declarations: [
@@ -55,7 +57,8 @@ import { AlbumListComponent } from './album-list/album-list.component';
     MatTableModule,
     MuslibApiModule,
     MatAutocompleteModule,
-    MatTabsModule
+    MatTabsModule,
+    StoreModule.forFeature(fromMuslib.muslibFeatureKey, fromMuslib.reducer)
   ]
 })
 export class ArtistsLibraryModule {}

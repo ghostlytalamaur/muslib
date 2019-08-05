@@ -7,12 +7,7 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 import { ArtistsLibraryModule } from './artists-library/artists-library.module';
 import { AppNavBarComponent } from './nav-bar/app-nav-bar.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {
-  MatButtonModule,
-  MatProgressBarModule,
-  MatProgressSpinnerModule,
-  MatToolbarModule
-} from '@angular/material';
+import { MatButtonModule, MatProgressBarModule, MatProgressSpinnerModule, MatToolbarModule } from '@angular/material';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { StatusInterceptor } from './http-interceptors/status-interceptor';
 import { StatusService } from './services/status.service';
@@ -21,8 +16,8 @@ import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireStorageModule } from '@angular/fire/storage';
 import { AuthModule } from './auth/auth.module';
-import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
-import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
+import { StoreModule } from '@ngrx/store';
+import { metaReducers, reducers } from './reducers';
 
 @NgModule({
   declarations: [AppComponent, PageNotFoundComponent, AppNavBarComponent],
@@ -41,8 +36,15 @@ import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
     BrowserAnimationsModule,
     MatProgressSpinnerModule,
     MatProgressBarModule,
-    environment.production ? [] : AkitaNgDevtools.forRoot(),
-    AkitaNgRouterStoreModule.forRoot()
+    // environment.production ? [] : AkitaNgDevtools.forRoot(),
+    // AkitaNgRouterStoreModule.forRoot(),
+    StoreModule.forRoot(reducers, {
+      metaReducers,
+      runtimeChecks: {
+        strictStateImmutability: true,
+        strictActionImmutability: true
+      }
+    })
   ],
   providers: [
     StatusService,

@@ -15,9 +15,7 @@ interface FireArtist {
   mbid?: string;
 }
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class ArtistsStorageService extends BaseService<FireArtist, ArtistEntity> {
 
   constructor(

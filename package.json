@@ -7,6 +7,8 @@
     "watch": "concurrently --raw -k -p \"[{name}]\" -n \"Client,Server\" -c \"green.bold,blue.bold\" \"yarn workspace @muslib/client start\" \"yarn workspace @muslib/server watch\""
   },
   "devDependencies": {
-    "concurrently": "4.1.0"
+    "concurrently": "4.1.0",
+    "tslint": "~5.18.0",
+    "typescript": "~3.4.5"
   }
 }
