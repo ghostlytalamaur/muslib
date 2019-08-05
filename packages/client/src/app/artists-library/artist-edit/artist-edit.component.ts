@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ArtistsService } from '../services/artists.service';
 import { Router } from '@angular/router';
+import { ArtistsStorageService } from '../services/artists-storage.service';
 
 interface FormValue {
   name: string;
@@ -16,7 +16,7 @@ export class ArtistEditComponent implements OnInit {
   form: FormGroup;
   private imageFile: File;
 
-  constructor(private service: ArtistsService, private router: Router) {}
+  constructor(private service: ArtistsStorageService, private router: Router) {}
 
   ngOnInit(): void {
     this.form = new FormGroup({

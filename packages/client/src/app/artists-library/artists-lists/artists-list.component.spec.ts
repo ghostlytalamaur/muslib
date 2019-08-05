@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ArtistsListComponent } from './artists-list.component';
 import { CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';
-import { ArtistsService } from '../services/artists.service';
+import { ArtistsStorageService } from '../services/artists.service';
 import { BehaviorSubject, of } from 'rxjs';
 import { Artist } from '../../models/artist';
 import { By } from '@angular/platform-browser';
@@ -23,7 +23,7 @@ describe('ArtistsListComponent', () => {
   let fixture: ComponentFixture<ArtistsListComponent>;
   let cardsCont: DebugElement;
   const artists = new BehaviorSubject<Artist[]>(null);
-  const artistService = jasmine.createSpyObj<ArtistsService>(
+  const artistService = jasmine.createSpyObj<ArtistsStorageService>(
     'artistServiceSpy',
     {
       getArtists: artists.asObservable(),
@@ -42,7 +42,7 @@ describe('ArtistsListComponent', () => {
       ],
       declarations: [ArtistsListComponent, ArtistCardComponent],
       providers: [
-        { provide: ArtistsService, useValue: artistService },
+        { provide: ArtistsStorageService, useValue: artistService },
         { provide: ActivatedRoute, useValue: activatedRoute }
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]

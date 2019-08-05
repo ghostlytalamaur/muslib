@@ -7,7 +7,7 @@
   <ng-container matColumnDef="image">
     <th *matHeaderCellDef mat-header-cell></th>
     <td *matCellDef="let album" class="cell" mat-cell>
-      <img src="{{ album.image$ | async }}" />
+      <img src="{{ album.imageUrl }}" />
     </td>
   </ng-container>
 

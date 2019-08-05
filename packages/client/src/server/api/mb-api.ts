@@ -24,7 +24,7 @@ export class MBApi {
     return this.http.get<ReleaseGroupsResult>(url, { params });
   }
 
-  coverArt(releaseGroup: string, id: string): Observable<string> {
+  coverArt(id: string): Observable<string> {
     const url = `${sharedEnvironment.server.url}/mb/coverart/release-group`;
     const params = new HttpParams()
       .set('id', id);

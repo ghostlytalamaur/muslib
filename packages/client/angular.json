@@ -138,5 +138,8 @@
       }
     }
   },
-  "defaultProject": "muslib"
+  "defaultProject": "muslib",
+  "cli": {
+    "defaultCollection": "@datorama/akita"
+  }
 }

@@ -13,9 +13,8 @@ export class ArtistCardComponent implements OnInit {
   @Output()
   deleteArtist: EventEmitter<string> = new EventEmitter<string>();
 
-  constructor() {}
-
-  ngOnInit(): void {}
+  ngOnInit(): void {
+  }
 
   onDelete(): void {
     this.deleteArtist.emit(this.artist.id);

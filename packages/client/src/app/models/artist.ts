@@ -1,19 +1,17 @@
-import { Observable } from 'rxjs';
-import { publishReplay, refCount } from 'rxjs/operators';
-import { IdHolder } from './id-holder';
+export interface Artist {
+  readonly id: string;
+  readonly name: string;
+  readonly imageUrl: string;
+  readonly mbid?: string;
+}
 
-export class Artist implements IdHolder {
-  readonly image$: Observable<string>;
+export type PartialArtist = { id: string } & Partial<Artist>;
 
-  constructor(
-    readonly id: string,
-    readonly name: string,
-    image: Observable<string>,
-    readonly mbid?: string,
-  ) {
-    this.image$ = image.pipe(
-      publishReplay(1),
-      refCount()
-    );
-  }
+export function createArtist(id: string, name: string, imageUrl: string, mbid?: string): Artist {
+  return {
+    id,
+    name,
+    imageUrl,
+    mbid
+  };
 }

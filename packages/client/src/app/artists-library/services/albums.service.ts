@@ -1,58 +1,73 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
-import { AngularFireStorage } from '@angular/fire/storage';
-import { Observable } from 'rxjs';
-import { MuslibApi } from 'src/server/api/server-api';
-import { AuthService } from '../../auth/auth.service';
-import { Album } from '../../models/album';
-import { StatusService } from '../../services/status.service';
-import { BaseService } from './base-library.service';
-import { Collections } from './constants';
-
-interface FireAlbum {
-  year: number;
-  name: string;
-}
+import { NEVER, Observable } from 'rxjs';
+import { Album, createAlbum } from '../../models/album';
+import { AlbumsStore } from '../store/albums.store';
+import { AlbumsQuery } from '../store/albums.query';
+import { AlbumsStorageService } from './albums-storage.service';
+import { MuslibApi } from '../../../server/api/server-api';
+import { map, switchMap } from 'rxjs/operators';
+import { ArtistsStore } from '../store/artists.store';
+import { ImagesService } from './images.service';
+import { ImageType } from '../../models/image';
+import { ArtistsQuery } from '../store/artists.query';
+import { createAlbumEntity } from '../store/album.entity';
 
 @Injectable()
-export class AlbumsService extends BaseService<FireAlbum, Album> {
+export class AlbumsService {
+
   constructor(
-    statusService: StatusService,
-    server: MuslibApi,
-    authService: AuthService,
-    fireStore: AngularFirestore,
-    fireStorage: AngularFireStorage
+    private readonly store: AlbumsStore,
+    private readonly query: AlbumsQuery,
+    private readonly storage: AlbumsStorageService,
+    private readonly server: MuslibApi,
+    private readonly artistsQuery: ArtistsQuery,
+    private readonly artistsStore: ArtistsStore,
+    private readonly imgService: ImagesService
   ) {
-    super(statusService, server, authService, fireStore, fireStorage);
   }
 
-  static getAlbumsCollection(artistId: string): string {
-    return `${Collections.ARTISTS}/${artistId}/${Collections.ALBUMS}`;
+  getAlbums(id: string): Observable<Album[]> {
+    return this.artistsQuery.getArtistAlbums(id)
+      .pipe(
+        switchMap(albumIds => this.query.getAlbums(albumIds))
+      );
   }
 
-  addAlbum(
-    artistId: string,
-    year: number,
-    name: string,
-    image: File
-  ): Promise<string> {
-    return this.addItem(
-      AlbumsService.getAlbumsCollection(artistId),
-      { name, year },
-      image
-    );
+  loadAlbums(artistId: string): void {
+    const artist = this.artistsQuery.getEntity(artistId);
+    if (!artist || !artist.mbid) {
+      return;
+    }
+
+    this.server.mb2.releaseGroups(artist.mbid)
+      .pipe(
+        map(groups => {
+          return groups.releaseGroups
+            .map(group => createAlbumEntity(group.id, group.title, group.year, group.id, artistId));
+        })
+      )
+      .subscribe(albums => {
+        this.store.add(albums);
+        const albumsIds = albums.map(album => album.id);
+        this.imgService.loadImages(ImageType.CoverArt, ...albumsIds);
+        this.artistsStore.update(artistId, ignored => ({
+          albums: albumsIds
+        }));
+      });
   }
 
-  deleteAlbum(artistId: string, id: string): Promise<void> {
-    return this.deleteItem(AlbumsService.getAlbumsCollection(artistId), id);
+  getFavoriteAlbums(artistId: string): Observable<Album[]> {
+    return this.query.getFavoriteAlbums(artistId);
   }
 
-  getAlbums(artistId: string): Observable<Album[]> {
-    return this.getItems(
-      AlbumsService.getAlbumsCollection(artistId),
-      96,
-      (id, data, image$) =>
-        new Album(id, data.year, data.name, image$, artistId)
-    );
+  addAlbum(artistId: string, title: string, year: number, image: File): void {
+    this.storage.addAlbum(artistId, year, title, image)
+      .catch(console.log);
   }
+
+  deleteAlbum(artistId: string, id: string): void {
+    this.storage.deleteAlbum(artistId, id)
+      .catch(console.log);
+  }
+
 }

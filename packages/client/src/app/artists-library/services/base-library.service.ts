@@ -65,7 +65,7 @@ export class BaseService<T, R> {
   protected getItems(
     path: string,
     size: number,
-    factory: (id: string, data: T, image$: Observable<string>) => R
+    factory: (id: string, data: T, image: string) => R
   ): Observable<R[]> {
     return this.authService.user$.pipe(
       switchMap(user => {
@@ -78,11 +78,8 @@ export class BaseService<T, R> {
                 changes.map(change => {
                   const id = change.payload.doc.id;
                   const data = change.payload.doc.data();
-                  const image$ = this.getImageUrl(
-                    this.fireStorage,
-                    BaseService.getImageId(user.uid, path, id, size.toString())
-                  );
-                  return factory(id, data, image$);
+                  const imageId = BaseService.getImageId(user.uid, path, id, size.toString());
+                  return factory(id, data, imageId);
                 })
               )
             );
@@ -102,15 +99,14 @@ export class BaseService<T, R> {
     }
   }
 
-  private getImageUrl(
+  private async getImageUrl(
     storage: AngularFireStorage,
     path: string
-  ): Observable<string> {
-    const urlPromise = storage.storage
+  ): Promise<string> {
+    return storage.storage
       .ref(path)
       .getDownloadURL()
       .catch(() => Promise.resolve(''));
-    return from(urlPromise).pipe(catchError(() => of('')));
   }
 
   private uploadFile(path: string, image: File | string): Promise<void> {

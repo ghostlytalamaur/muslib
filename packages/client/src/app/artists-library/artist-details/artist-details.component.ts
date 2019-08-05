@@ -1,8 +1,8 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
-import { BehaviorSubject, NEVER, Observable, of, Subject } from 'rxjs';
-import { catchError, map, mergeMap, publishReplay, refCount, switchMap, take, takeUntil } from 'rxjs/operators';
+import { NEVER, Observable } from 'rxjs';
+import { filter, map, switchMap, take, takeUntil } from 'rxjs/operators';
 import {
   ListDialogComponent,
   ListDialogData,
@@ -13,21 +13,20 @@ import { Album } from '../../models/album';
 import { Artist } from '../../models/artist';
 import { NewAlbumData, NewAlbumDialogComponent } from '../new-album-dialog/new-album-dialog.component';
 import { AlbumsService } from '../services/albums.service';
-import { ArtistsService } from '../services/artists.service';
 import { ArtistSearchResult } from 'muslib/shared';
+import { BaseComponent } from '../../shared/BaseComponent';
+import { ArtistsService } from '../services/artists.service';
 
 @Component({
   selector: 'app-artist-details',
   templateUrl: './artist-details.component.html',
   styleUrls: ['./artist-details.component.scss']
 })
-export class ArtistDetailsComponent implements OnInit, OnDestroy {
-  artist$: Observable<Artist>;
-  albums$: Observable<Album[]>;
-  favoriteAlbums$: Observable<Album[]>;
-  private alive$: Subject<boolean> = new Subject<boolean>();
-  private artistId$: BehaviorSubject<string>;
-  private error: string;
+export class ArtistDetailsComponent extends BaseComponent implements OnInit {
+  artist$: Observable<Artist | undefined> | undefined;
+  albums$: Observable<Album[]> | undefined;
+  favoriteAlbums$: Observable<Album[]> | undefined;
+  private artistId: string | null;
 
   constructor(
     private artistsService: ArtistsService,
@@ -36,87 +35,57 @@ export class ArtistDetailsComponent implements OnInit, OnDestroy {
     private matDialog: MatDialog,
     private server: MuslibApi
   ) {
+    super();
   }
 
   ngOnInit(): void {
-    this.artistId$ = new BehaviorSubject<string>('');
-
     this.route.paramMap
       .pipe(
         map(params => params.get('id')),
         takeUntil(this.alive$)
       )
-      .subscribe(id => {
-        if (id) {
-          this.artistId$.next(id);
-        }
-      });
-
-    this.artist$ = this.artistId$.pipe(
-      switchMap(id => {
-        return this.artistsService.getArtist(id);
-      }),
-      publishReplay(1),
-      refCount()
-    );
-
-    this.albums$ = this.artist$.pipe(
-      switchMap(artist => {
-        if (artist.mbid) {
-          return this.server.mb2.releaseGroups(artist.mbid);
-        } else {
-          throw new Error();
-        }
-      }),
-      map(groups => {
-        console.log(groups);
-        return groups.releaseGroups.map(group => {
-          console.log(group.title);
-          return new Album(group.id, group.year, group.title, this.server.mb2.coverArt('release-group', group.id), '');
-        });
-      }),
-      catchError(err => {
-        console.log('Cannot get release groups', err);
-        return of([]);
-      })
-    );
-
-    this.favoriteAlbums$ = this.artist$.pipe(
-      switchMap(artist => this.albumsService.getAlbums(artist.id)),
-      catchError(err => {
-        console.log('GetAlbums error', err);
-        return NEVER;
-      })
-    );
+      .subscribe(id => this.setArtist(id));
   }
 
-  ngOnDestroy(): void {
-    this.alive$.next(false);
-    this.alive$.complete();
+  private setArtist(id: string | null): void {
+    this.artistId = id;
+    if (this.artistId) {
+      this.artist$ = this.artistsService.getArtist(this.artistId);
+      this.albumsService.loadAlbums(this.artistId);
+      this.albums$ = this.albumsService.getAlbums(this.artistId);
+      this.favoriteAlbums$ = this.albumsService.getFavoriteAlbums(this.artistId);
+    } else {
+      this.artist$ = undefined;
+      this.albums$ = undefined;
+      this.favoriteAlbums$ = undefined;
+    }
   }
 
   addNewAlbum(): void {
     const dialogRef = this.matDialog.open(NewAlbumDialogComponent);
     dialogRef
       .afterClosed()
-      .toPromise()
-      .then((data: NewAlbumData) => {
-        if (data) {
-          console.log('Add album', data);
-          this.albumsService
-            .addAlbum(this.artistId$.value, data.year, data.name, data.image)
-            .catch(err => console.log('Error while adding new album.', err));
+      .pipe(takeUntil(this.alive$))
+      .subscribe(
+        (data: NewAlbumData) => {
+          if (data && this.artistId) {
+            this.albumsService.addAlbum(this.artistId, data.name, data.year, data.image);
+          }
         }
-      });
+      );
   }
 
   onDeleteAlbum(albumId: string): void {
-    this.albumsService
-      .deleteAlbum(this.artistId$.value, albumId)
-      .catch(() => (this.error = `Cannot delete album.`));
+    if (this.artistId) {
+      this.albumsService.deleteAlbum(this.artistId, albumId);
+    }
   }
 
   selectMbid(): void {
+    if (!this.artist$) {
+      return;
+    }
+
     const selectId = (artist: Artist, similar: ArtistSearchResult): Observable<string> => {
       let selected = -1;
       if (artist.mbid) {
@@ -148,7 +117,8 @@ export class ArtistDetailsComponent implements OnInit, OnDestroy {
     this.artist$
       .pipe(
         take(1),
-        switchMap((artist) =>
+        filter(artist => !!artist),
+        switchMap((artist: Artist) =>
           this.server.mb2.searchArtist(artist.name)
             .pipe(
               map(similar => ({ artist, similar }))

@@ -2,7 +2,7 @@ import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/c
 import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 import { Injectable } from '@angular/core';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, take } from 'rxjs/operators';
 import { sharedEnvironment } from 'muslib/shared';
 
 @Injectable()
@@ -15,6 +15,7 @@ export class AuthInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<any>> {
     if (req.url.includes(sharedEnvironment.server.url)) {
       return this.authService.idToken.pipe(
+        take(1),
         switchMap(idToken => {
           let authReq = req;
           if (idToken) {

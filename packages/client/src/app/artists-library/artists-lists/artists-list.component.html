@@ -6,10 +6,10 @@
   <ng-container *ngIf="artists$ | async as artists">
     <div class="artists-container">
       <app-artist-card
+        [routerLink]="artist.id"
         (deleteArtist)="deleteArtist($event)"
         [artist]="artist"
         *ngFor="let artist of artists; trackBy: trackById"
-        (click)="onClick(artist)"
       ></app-artist-card>
     </div>
   </ng-container>

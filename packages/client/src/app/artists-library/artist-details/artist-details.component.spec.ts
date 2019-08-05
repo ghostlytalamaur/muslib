@@ -13,7 +13,7 @@ import {
   MatMenuModule,
   MatTableModule
 } from '@angular/material';
-import { ArtistsService } from '../services/artists.service';
+import { ArtistsStorageService } from '../services/artists.service';
 import { AlbumsService } from '../services/albums.service';
 import { instance, mock, verify, when } from 'ts-mockito';
 import { ActivatedRoute } from '@angular/router';
@@ -42,10 +42,10 @@ const data = [
 ];
 
 function mockServices(): {
-  artistsService: ArtistsService;
+  artistsService: ArtistsStorageService;
   albumsService: AlbumsService;
 } {
-  const artistsService = mock(ArtistsService);
+  const artistsService = mock(ArtistsStorageService);
   const albumsService = mock(AlbumsService);
   for (const dataSet of data) {
     when(artistsService.getArtist(dataSet.artist.id)).thenReturn(
@@ -88,7 +88,7 @@ describe('ArtistDetailsComponent', () => {
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [
         {
-          provide: ArtistsService,
+          provide: ArtistsStorageService,
           useFactory: () => instance(artistServiceMock)
         },
         {

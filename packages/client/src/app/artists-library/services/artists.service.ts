@@ -1,76 +1,65 @@
-import { Injectable } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
-import { AngularFireStorage } from '@angular/fire/storage';
-import { Observable } from 'rxjs';
-import { map, publish, refCount } from 'rxjs/operators';
-import { MuslibApi } from 'src/server/api/server-api';
-import { AuthService } from '../../auth/auth.service';
-import { Artist } from '../../models/artist';
-import { IdHolder } from '../../models/id-holder';
-import { StatusService } from '../../services/status.service';
-import { BaseService } from './base-library.service';
-import { Collections } from './constants';
-
-interface FireArtist {
-  name: string;
-  mbid?: string;
-}
+import { ArtistsStore } from '../store/artists.store';
+import { Artist, PartialArtist } from '../../models/artist';
+import { NEVER, Observable, Subject } from 'rxjs';
+import { ArtistsQuery } from '../store/artists.query';
+import { ArtistsStorageService } from './artists-storage.service';
+import { Injectable, OnDestroy } from '@angular/core';
+import { exhaustMap, takeUntil } from 'rxjs/operators';
+import { ImagesService } from './images.service';
+import { ImageType } from '../../models/image';
 
 @Injectable()
-export class ArtistsService extends BaseService<FireArtist, Artist> {
-  private artists$: Observable<Artist[]>;
+export class ArtistsService implements OnDestroy {
+  private readonly alive$: Subject<void>;
 
   constructor(
-    statusService: StatusService,
-    server: MuslibApi,
-    authService: AuthService,
-    fireStore: AngularFirestore,
-    storage: AngularFireStorage
+    private readonly store: ArtistsStore,
+    private readonly query: ArtistsQuery,
+    private readonly storageService: ArtistsStorageService,
+    private readonly imgService: ImagesService,
   ) {
-    super(statusService, server, authService, fireStore, storage);
+    this.alive$ = new Subject<void>();
+  }
+
+  addArtist(name: string, image?: File | string): void {
+    this.storageService.addArtist(name, image)
+      .catch();
+  }
+
+  deleteArtist(id: string): void {
+    this.storageService.deleteArtist(id)
+      .catch();
+  }
+
+  updateArtist(artist: PartialArtist): void {
+    this.storageService.updateArtist(artist)
+      .catch();
   }
 
   getArtists(): Observable<Artist[]> {
-    if (!this.artists$) {
-      this.artists$ = this.getItems(
-        Collections.ARTISTS,
-        300,
-        (id, data, image$) => new Artist(id, data.name, image$, data.mbid)
-      ).pipe(
-        publish(),
-        refCount()
-      );
-    }
-    return this.artists$;
+    return this.query.getArtists();
   }
 
-  deleteArtist(docId: string): Promise<void> {
-    return this.deleteItem(Collections.ARTISTS, docId);
+  getArtist(id: string): Observable<Artist | undefined> {
+    return this.query.getArtist(id);
   }
 
-  addArtist(name: string, image?: File | string): Promise<string> {
-    return this.addItem(Collections.ARTISTS, { name }, image);
-  }
-
-  updateArtist(artist: Partial<Artist> & IdHolder): Promise<void> {
-    return this.updateItem(Collections.ARTISTS, artist);
-  }
-
-  getArtist(id: string): Observable<Artist> {
-    return this.getArtists().pipe(
-      map(artists => {
-        const artist = artists.find(a => a.id === id);
-        if (artist) {
-          return artist;
-        } else {
-          throw new Error('Artist not found.');
+  loadArtists(): void {
+    this.query.selectLoading()
+      .pipe(
+        exhaustMap(loading => loading ? this.storageService.getArtists() : NEVER),
+        takeUntil(this.alive$)
+      )
+      .subscribe(
+        artists => {
+          this.imgService.loadImages(ImageType.FireStorage, ...artists.map(a => a.imageId));
+          this.store.set(artists);
         }
-      })
-    );
+      );
   }
 
-  // tslint:disable-next-line: typedef
-  [Symbol.toStringTag]() {
-    return 'Artist Service';
+  ngOnDestroy(): void {
+    this.alive$.next();
+    this.alive$.complete();
   }
 }
