@@ -26,6 +26,9 @@ import { ArtistDetailsComponent } from './artist-details/artist-details.componen
 import { AlbumListComponent } from './album-list/album-list.component';
 import { StoreModule } from '@ngrx/store';
 import * as fromMuslib from './store/ngrx/muslib.reducer';
+import { EffectsModule } from '@ngrx/effects';
+import { ArtistsEffects } from './store/ngrx/artists.effects';
+import { ImagesEffects } from './store/ngrx/images.effects';
 
 @NgModule({
   declarations: [
@@ -58,7 +61,8 @@ import * as fromMuslib from './store/ngrx/muslib.reducer';
     MuslibApiModule,
     MatAutocompleteModule,
     MatTabsModule,
-    StoreModule.forFeature(fromMuslib.muslibFeatureKey, fromMuslib.reducer)
+    StoreModule.forFeature(fromMuslib.muslibFeatureKey, fromMuslib.reducer),
+    EffectsModule.forFeature([ArtistsEffects, ImagesEffects])
   ]
 })
 export class ArtistsLibraryModule {}

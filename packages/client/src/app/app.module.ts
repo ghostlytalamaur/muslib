@@ -18,6 +18,8 @@ import { AngularFireStorageModule } from '@angular/fire/storage';
 import { AuthModule } from './auth/auth.module';
 import { StoreModule } from '@ngrx/store';
 import { metaReducers, reducers } from './reducers';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { EffectsModule } from '@ngrx/effects';
 
 @NgModule({
   declarations: [AppComponent, PageNotFoundComponent, AppNavBarComponent],
@@ -36,15 +38,15 @@ import { metaReducers, reducers } from './reducers';
     BrowserAnimationsModule,
     MatProgressSpinnerModule,
     MatProgressBarModule,
-    // environment.production ? [] : AkitaNgDevtools.forRoot(),
-    // AkitaNgRouterStoreModule.forRoot(),
     StoreModule.forRoot(reducers, {
       metaReducers,
       runtimeChecks: {
         strictStateImmutability: true,
         strictActionImmutability: true
       }
-    })
+    }),
+    EffectsModule.forRoot([]),
+    StoreDevtoolsModule.instrument()
   ],
   providers: [
     StatusService,

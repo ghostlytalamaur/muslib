@@ -1,10 +1,11 @@
 import { Artist, PartialArtist } from '../../models/artist';
-import { NEVER, Observable, Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { ArtistsStorageService } from './artists-storage.service';
 import { Injectable, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
 import * as fromArtists from '../store/ngrx/artists.reducer';
 import * as fromMuslib from '../store/ngrx/muslib.reducer';
+import * as ArtistsActions from '../store/ngrx/artists.actions';
 
 @Injectable()
 export class ArtistsService implements OnDestroy {
@@ -12,9 +13,17 @@ export class ArtistsService implements OnDestroy {
 
   constructor(
     private readonly storageService: ArtistsStorageService,
-    // private store: Store<fromArtists.State>
+    private store: Store<fromArtists.State>
   ) {
     this.alive$ = new Subject<void>();
+  }
+
+  getArtists(): Observable<Artist[]> {
+    return this.store.select(fromMuslib.getArtists);
+  }
+
+  getArtist(id: string): Observable<Artist | undefined> {
+    return this.store.select(fromMuslib.getArtist(id));
   }
 
   addArtist(name: string, image?: File | string): void {
@@ -32,28 +41,8 @@ export class ArtistsService implements OnDestroy {
       .catch();
   }
 
-  getArtists(): Observable<Artist[]> {
-    // return this.store.select(fromMuslib.getArtists);
-    return NEVER;
-  }
-
-  getArtist(id: string): Observable<Artist | undefined> {
-    return NEVER;
-    // return this.store.select(fromMuslib.getArtist(id));
-  }
-
   loadArtists(): void {
-    // this.query.selectLoading()
-    //   .pipe(
-    //     exhaustMap(loading => loading ? this.storageService.getArtists() : NEVER),
-    //     takeUntil(this.alive$)
-    //   )
-    //   .subscribe(
-    //     artists => {
-    //       this.imgService.loadImages(ImageType.FireStorage, ...artists.map(a => a.imageId));
-    //       this.store.set(artists);
-    //     }
-    //   );
+    this.store.dispatch(ArtistsActions.loadArtists());
   }
 
   ngOnDestroy(): void {

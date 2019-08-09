@@ -1,51 +1,54 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { AngularFireStorage } from '@angular/fire/storage';
-import { Observable } from 'rxjs';
-import { MuslibApi } from 'src/server/api/server-api';
 import { AuthService } from '../../auth/auth.service';
 import { IdHolder } from '../../models/id-holder';
-import { StatusService } from '../../services/status.service';
-import { BaseService } from './base-library.service';
-import { Collections } from './constants';
 import { ArtistEntity, createArtistEntity } from '../store/artist.entity';
+import { FireEntityService } from '../store/ngrx/fire-entity.service';
+import { ImagesStorage } from './images-storage.service';
 
 interface FireArtist {
   name: string;
   mbid?: string;
+  imageId: string;
 }
 
-@Injectable()
-export class ArtistsStorageService extends BaseService<FireArtist, ArtistEntity> {
+@Injectable({
+  providedIn: 'root'
+})
+export class ArtistsStorageService extends FireEntityService<ArtistEntity, FireArtist> {
 
   constructor(
-    statusService: StatusService,
-    server: MuslibApi,
     authService: AuthService,
     fireStore: AngularFirestore,
-    storage: AngularFireStorage
+    private readonly imgStorage: ImagesStorage
   ) {
-    super(statusService, server, authService, fireStore, storage);
-  }
-
-  getArtists(): Observable<ArtistEntity[]> {
-    return this.getItems(
-        Collections.ARTISTS,
-        300,
-        (id, data, imageId) => createArtistEntity(id, data.name, imageId, data.mbid)
-      );
+    super(fireStore, authService, 'artists');
   }
 
   deleteArtist(docId: string): Promise<void> {
-    return this.deleteItem(Collections.ARTISTS, docId);
+    return this.deleteEntity(docId);
   }
 
-  addArtist(name: string, image?: File | string): Promise<string> {
-    return this.addItem(Collections.ARTISTS, { name }, image);
+  async addArtist(name: string, image?: File | string): Promise<string> {
+    let imageId = '';
+    if (image) {
+      imageId = await this.imgStorage.uploadImage(image);
+    }
+    return this.addEntity({ name, imageId });
   }
 
   updateArtist(artist: Partial<ArtistEntity> & IdHolder): Promise<void> {
-    return this.updateItem(Collections.ARTISTS, artist);
+    const data: Partial<FireArtist> = {};
+    if (artist.name) {
+      data.name = artist.name;
+    }
+    if (artist.mbid) {
+      data.mbid = artist.mbid;
+    }
+    return this.updateEntity(artist.id, data);
   }
 
+  protected createEntity(userId: string, id: string, data: FireArtist): ArtistEntity {
+    return createArtistEntity(id, data.name, data.imageId, data.mbid);
+  }
 }

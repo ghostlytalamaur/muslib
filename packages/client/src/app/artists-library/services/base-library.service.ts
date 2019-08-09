@@ -1,7 +1,7 @@
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireStorage } from '@angular/fire/storage';
-import { from, Observable, of } from 'rxjs';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 import { MuslibApi } from 'src/server/api/server-api';
 import { AuthService } from '../../auth/auth.service';
 import { IdHolder } from '../../models/id-holder';
@@ -61,6 +61,16 @@ export class BaseService<T, R> {
       .doc(id)
       .delete();
   }
+
+  // private changes(): void {
+  //   this.fireStore.collection<T>('')
+  //     .stateChanges()
+  //     .subscribe(
+  //       (action: DocumentChangeAction<T>[]) => {
+  //         action[0].type
+  //       }
+  //     )
+  // }
 
   protected getItems(
     path: string,

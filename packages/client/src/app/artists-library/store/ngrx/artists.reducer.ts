@@ -12,6 +12,9 @@ export const adapter = createEntityAdapter<ArtistEntity>();
 const initialState: State = adapter.getInitialState();
 
 export const reducer = createReducer(initialState,
-  on(ArtistsActions.setArtists, (state, { artists }) => adapter.addAll(artists, state))
+  on(ArtistsActions.setArtists, (state, { artists }) => adapter.addAll(artists, state)),
+  on(ArtistsActions.artistsAdded, (state, { artists }) => adapter.addMany(artists, state)),
+  on(ArtistsActions.artistsModified, (state, { artists }) => adapter.upsertMany(artists, state)),
+  on(ArtistsActions.artistsDeleted, (state, { ids }) => adapter.removeMany(ids, state))
 );
 

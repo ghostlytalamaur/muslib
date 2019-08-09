@@ -84,6 +84,19 @@ const getArtistAlbumsEntities = (artistId: string) => createSelector(
     artistEntity ? getAlbumsEntitiesByIds(albumsMap, artistEntity.albums) : undefined
 );
 
+export const getImageIds = createSelector(
+  getArtistsEntities,
+  entities => {
+    const ids: string[] = [];
+    for (const entity of entities) {
+      if (entity.imageId) {
+        ids.push(entity.imageId);
+      }
+    }
+    return ids;
+  }
+);
+
 export const getArtists = createSelector(
   getArtistsEntities,
   getImagesEntitiesMap,
