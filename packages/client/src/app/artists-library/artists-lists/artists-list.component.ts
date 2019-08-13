@@ -12,6 +12,7 @@ import { NewArtistData, NewArtistDialogComponent } from '../new-artist-dialog/ne
 })
 export class ArtistsListComponent implements OnInit {
   artists$: Observable<Artist[]>;
+  loaded$: Observable<boolean>;
 
   constructor(
     private service: ArtistsService,
@@ -20,6 +21,7 @@ export class ArtistsListComponent implements OnInit {
 
   ngOnInit(): void {
     this.artists$ = this.service.getArtists();
+    this.loaded$ = this.service.getIsLoaded();
   }
 
   deleteArtist(id: string): void {

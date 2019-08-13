@@ -45,6 +45,10 @@ export class ArtistsService implements OnDestroy {
     this.store.dispatch(ArtistsActions.loadArtists());
   }
 
+  getIsLoaded(): Observable<boolean> {
+    return this.store.select(fromMuslib.getArtistsLoaded);
+  }
+
   ngOnDestroy(): void {
     this.alive$.next();
     this.alive$.complete();

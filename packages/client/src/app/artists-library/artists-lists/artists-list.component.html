@@ -1,16 +1,25 @@
 <div class="artists-library">
-  <div class="actions">
-    <a mat-flat-button (click)="onNewArtist()">New artist</a>
-  </div>
-
-  <ng-container *ngIf="artists$ | async as artists">
-    <div class="artists-container">
-      <app-artist-card
-        [routerLink]="artist.id"
-        (deleteArtist)="deleteArtist($event)"
-        [artist]="artist"
-        *ngFor="let artist of artists; trackBy: trackById"
-      ></app-artist-card>
+  <ng-container *ngIf="loaded$ | async; else loadingIndicator">
+    <div class="actions">
+      <a (click)="onNewArtist()" mat-flat-button>New artist</a>
     </div>
+
+    <ng-container *ngIf="artists$ | async as artists">
+      <div class="artists-container">
+        <app-artist-card
+          (deleteArtist)="deleteArtist($event)"
+          *ngFor="let artist of artists; trackBy: trackById"
+          [artist]="artist"
+          [routerLink]="artist.id"
+        ></app-artist-card>
+      </div>
+    </ng-container>
+
   </ng-container>
 </div>
+
+<ng-template #loadingIndicator>
+  <div class="loading-indicator">
+    <mat-spinner></mat-spinner>
+  </div>
+</ng-template>

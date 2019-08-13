@@ -1,6 +1,11 @@
-import { AngularFirestore, DocumentChangeAction, Query } from '@angular/fire/firestore';
+import {
+  AngularFirestore,
+  DocumentChangeAction,
+  DocumentSnapshot,
+  QueryDocumentSnapshot
+} from '@angular/fire/firestore';
 import { AuthService } from '../../../auth/auth.service';
-import { NEVER, Observable, of } from 'rxjs';
+import { NEVER, Observable, of, zip } from 'rxjs';
 import { map, switchMap, take } from 'rxjs/operators';
 import { User } from '../../../auth/user';
 
@@ -111,23 +116,15 @@ export abstract class FireEntityService<Entity, EntityData> {
     return this.createEntitiesForUser(user, action$);
   }
 
+  protected getEntityPath(userId: string, entityId: string): string {
+    return `${this.getCollectionPath(userId)}/${entityId}`;
+  }
+
   private createEntitiesForUser(user: User, action$: Observable<DocumentChangeAction<EntityData>[]>): Observable<Entity[]> {
     return action$
       .pipe(
-        switchMap(changes => {
-          return Promise.all(
-            changes.map(doc => {
-              const id = doc.payload.doc.id;
-              const data = doc.payload.doc.data();
-              const entity = this.createEntity(user.uid, id, data);
-              if (entity instanceof Promise) {
-                return entity;
-              } else {
-                return Promise.resolve(entity);
-              }
-            })
-          );
-        })
+        switchMap(changes => Promise.all(changes.map(doc => this.createEntityFromDoc(user, doc.payload.doc)))),
+        map(entities => entities.filter(entity => !!entity) as Entity[])
       );
   }
 
@@ -138,10 +135,39 @@ export abstract class FireEntityService<Entity, EntityData> {
       );
   }
 
+  private createEntityFromDoc(user: User,
+                              doc: QueryDocumentSnapshot<EntityData> | DocumentSnapshot<EntityData>):
+    Promise<Entity | undefined> {
+
+    if (doc.exists) {
+      const id = doc.id;
+      const data = doc.data();
+      const entity = this.createEntity(user.uid, id, data);
+      if (entity instanceof Promise) {
+        return entity;
+      } else {
+        return Promise.resolve(entity);
+      }
+    } else {
+      return Promise.resolve(undefined);
+    }
+  }
+
+  private getEntity(user: User, id: string): Observable<Entity | undefined> {
+    return this.afs
+      .doc<EntityData>(this.getEntityPath(user.uid, id))
+      .snapshotChanges()
+      .pipe(
+        switchMap(change => this.createEntityFromDoc(user, change.payload))
+      );
+  }
+
   private getEntitiesForUser(ids: string[], user: User): Observable<Entity[]> {
-    const query = (ref: Query) => ref.where('id', 'array-contains', ids);
-    const action$ = this.afs.collection<EntityData>(this.getCollectionPath(user.uid), query).snapshotChanges();
-    return this.createEntitiesForUser(user, action$);
+    const entities$ = ids.map(id => this.getEntity(user, id));
+    return zip(...entities$)
+      .pipe(
+        map(entities => entities.filter(entity => !!entity) as Entity[])
+      );
   }
 
   private getCollectionPath(userId: string): string {

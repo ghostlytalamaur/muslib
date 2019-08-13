@@ -33,10 +33,9 @@ export class ImagesStorage extends FireEntityService<Image, ImageEntityData> {
         const path = `users/${user.uid}/images/${uniqueId}`;
         const entityId = await this.addEntity({ path });
         const imageRef = this.fireStorage.storage.ref(path);
-        const snapshot = await imageRef.put(image);
-        await imageRef.updateMetadata({
+        const snapshot = await imageRef.put(image, {
           contentType: image.type,
-          customMetadata: { entityId }
+          customMetadata: { entity: this.getEntityPath(user.uid, entityId) }
         });
 
         const id = snapshot.ref.fullPath;
@@ -52,13 +51,17 @@ export class ImagesStorage extends FireEntityService<Image, ImageEntityData> {
   }
 
   protected async createEntity(userId: string, id: string, data: ImageEntityData): Promise<Image> {
-    // if (data.thumbnails) {
-    //   const thumb300 = this.getImageUrl(data.thumbnails.thumb300);
-    // }
-    // this.getImageUrl(data.path)
-    // const url = this.getImageUrl(data.path);
-    return this.getImageUrl(data.path)
-      .then(url => createImage(ImageType.FireStorage, id, url));
+    const promises = [];
+    promises.push(this.getImageUrl(data.path));
+    if (data.thumbnails) {
+      promises.push(this.getImageUrl(data.thumbnails.thumb300));
+    }
+    return Promise.all(promises)
+      .then(([url, thumb300]) => {
+        return createImage(ImageType.FireStorage, id, url, {
+          thumb300
+        });
+      });
   }
 
   private getImageUrl(id: string): Promise<string> {

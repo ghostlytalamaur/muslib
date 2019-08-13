@@ -19,4 +19,12 @@
 
     overflow-y: auto;
   }
+
+  .loading-indicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    height: 100%;
+  }
 }

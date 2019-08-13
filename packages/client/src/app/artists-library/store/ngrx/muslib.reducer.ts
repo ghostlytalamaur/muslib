@@ -97,14 +97,23 @@ export const getImageIds = createSelector(
   }
 );
 
+function getImageUrl(images: Dictionary<Image>, id: string): string {
+  const image = images[id];
+  if (image) {
+    if (image.thumbnails && image.thumbnails.thumb300) {
+      return image.thumbnails.thumb300;
+    } else {
+      return image.url;
+    }
+  }
+  return '';
+}
+
 export const getArtists = createSelector(
   getArtistsEntities,
   getImagesEntitiesMap,
   (artists: ArtistEntity[], images: Dictionary<Image>) =>
-    artists.map(a => {
-      const image = images[a.imageId];
-      return createArtist(a.id, a.name, image ? image.url : '', a.mbid);
-    })
+    artists.map(a => createArtist(a.id, a.name, getImageUrl(images, a.imageId), a.mbid))
 );
 
 export const getArtist = (artistId: string) => createSelector(
@@ -116,8 +125,7 @@ export const getArtist = (artistId: string) => createSelector(
       return undefined;
     }
 
-    const image = images[artistEntity.imageId];
-    return createArtist(artistEntity.id, artistEntity.name, image ? image.url : '', artistEntity.mbid);
+    return createArtist(artistEntity.id, artistEntity.name, getImageUrl(images, artistEntity.imageId), artistEntity.mbid);
   }
 );
 
@@ -139,3 +147,7 @@ export const getArtistAlbums = (artistId: string) => createSelector(
   }
 );
 
+export const getArtistsLoaded = createSelector(
+  selectArtistState,
+  state => state.loaded
+);
