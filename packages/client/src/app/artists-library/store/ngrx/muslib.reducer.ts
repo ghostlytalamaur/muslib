@@ -9,7 +9,7 @@ import { Album, createAlbum } from '../../../models/album';
 import { Dictionary } from '@ngrx/entity';
 import { AlbumEntity } from '../album.entity';
 import { ArtistEntity } from '../artist.entity';
-import { Image } from '../../../models/image';
+import { Image, ImageId } from '../../../models/image';
 
 export const muslibFeatureKey = 'library';
 
@@ -57,7 +57,7 @@ const {
 
 const {
   selectEntities: getAlbumsEntitiesMap,
-  selectAll: getAllAlbumsEntities,
+  selectAll: getAlbumsEntities,
   selectIds: getAlbumsIds,
   selectTotal: getTotalAlbums
 } = fromAlbums.adapter.getSelectors(selectAlbumsState);
@@ -77,18 +77,27 @@ const getArtistEntity = (artistId: string) => createSelector(
 const getAlbumsEntitiesByIds = (albumsEntities: Dictionary<AlbumEntity>, ids: string[]) =>
   ids.map(id => albumsEntities[id]);
 
+const getAlbumsEntitiesByArtistId = (albumsEntities: AlbumEntity[], artistId: string) =>
+  albumsEntities.filter(entity => entity.artistId === artistId);
+
 const getArtistAlbumsEntities = (artistId: string) => createSelector(
-  getArtistEntity(artistId),
-  getAlbumsEntitiesMap,
-  (artistEntity: ArtistEntity, albumsMap: Dictionary<AlbumEntity>) =>
-    artistEntity ? getAlbumsEntitiesByIds(albumsMap, artistEntity.albums) : undefined
+  getAlbumsEntities,
+  (albumEntities: AlbumEntity[]) =>
+    getAlbumsEntitiesByArtistId(albumEntities, artistId)
 );
 
 export const getImageIds = createSelector(
   getArtistsEntities,
-  entities => {
-    const ids: string[] = [];
-    for (const entity of entities) {
+  getAlbumsEntities,
+  (artistsEntities, albumEntities) => {
+    const ids: ImageId[] = [];
+    for (const entity of artistsEntities) {
+      if (entity.imageId) {
+        ids.push(entity.imageId);
+      }
+    }
+
+    for (const entity of albumEntities) {
       if (entity.imageId) {
         ids.push(entity.imageId);
       }
@@ -113,7 +122,7 @@ export const getArtists = createSelector(
   getArtistsEntities,
   getImagesEntitiesMap,
   (artists: ArtistEntity[], images: Dictionary<Image>) =>
-    artists.map(a => createArtist(a.id, a.name, getImageUrl(images, a.imageId), a.mbid))
+    artists.map(a => createArtist(a.id, a.name, getImageUrl(images, a.imageId.id), a.mbid))
 );
 
 export const getArtist = (artistId: string) => createSelector(
@@ -125,7 +134,7 @@ export const getArtist = (artistId: string) => createSelector(
       return undefined;
     }
 
-    return createArtist(artistEntity.id, artistEntity.name, getImageUrl(images, artistEntity.imageId), artistEntity.mbid);
+    return createArtist(artistEntity.id, artistEntity.name, getImageUrl(images, artistEntity.imageId.id), artistEntity.mbid);
   }
 );
 
@@ -133,17 +142,14 @@ export const getArtistAlbums = (artistId: string) => createSelector(
   getArtistAlbumsEntities(artistId),
   getImagesEntitiesMap,
   (albums, images) => {
+    const res: Album[] = [];
     if (albums) {
-      return albums.reduce<Album[]>((arr, album) => {
-        if (album) {
-          const image = images[album.imageId];
-          arr.push(createAlbum(album.id, album.title, album.year, image ? image.url : '', artistId));
-        }
-        return arr;
-      }, []);
-    } else {
-      return [];
+      for (const album of albums) {
+        const image = images[album.imageId.id];
+        res.push(createAlbum(album.id, album.title, album.year, image ? image.url : '', artistId));
+      }
     }
+    return res;
   }
 );
 

@@ -5,6 +5,7 @@ import { IdHolder } from '../../models/id-holder';
 import { ArtistEntity, createArtistEntity } from '../store/artist.entity';
 import { FireEntityService } from '../store/ngrx/fire-entity.service';
 import { ImagesStorage } from './images-storage.service';
+import { createImageId, ImageType } from '../../models/image';
 
 interface FireArtist {
   name: string;
@@ -49,6 +50,6 @@ export class ArtistsStorageService extends FireEntityService<ArtistEntity, FireA
   }
 
   protected createEntity(userId: string, id: string, data: FireArtist): ArtistEntity {
-    return createArtistEntity(id, data.name, data.imageId, data.mbid);
+    return createArtistEntity(id, data.name, createImageId(ImageType.FireStorage, data.imageId), data.mbid);
   }
 }

@@ -29,6 +29,7 @@ import * as fromMuslib from './store/ngrx/muslib.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { ArtistsEffects } from './store/ngrx/artists.effects';
 import { ImagesEffects } from './store/ngrx/images.effects';
+import { AlbumsEffects } from './store/ngrx/albums.effects';
 
 @NgModule({
   declarations: [
@@ -62,7 +63,7 @@ import { ImagesEffects } from './store/ngrx/images.effects';
     MatAutocompleteModule,
     MatTabsModule,
     StoreModule.forFeature(fromMuslib.muslibFeatureKey, fromMuslib.reducer),
-    EffectsModule.forFeature([ArtistsEffects, ImagesEffects])
+    EffectsModule.forFeature([ArtistsEffects, ImagesEffects, AlbumsEffects])
   ]
 })
 export class ArtistsLibraryModule {}

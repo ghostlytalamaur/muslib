@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { NEVER, Observable } from 'rxjs';
 import { Album } from '../../models/album';
-import { AlbumsStorageService } from './albums-storage.service';
 import { MuslibApi } from '../../../server/api/server-api';
 import { Store } from '@ngrx/store';
 import * as fromMuslib from '../store/ngrx/muslib.reducer';
@@ -12,7 +11,6 @@ export class AlbumsService {
 
   constructor(
     private readonly store: Store<fromMuslib.State>,
-    private readonly storage: AlbumsStorageService,
     private readonly server: MuslibApi
   ) {
   }
