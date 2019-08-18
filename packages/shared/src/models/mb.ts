@@ -23,3 +23,7 @@ export const compareByYear: Ord<ReleaseGroup> = contramap((group: ReleaseGroup) 
 export interface ReleaseGroupsResult {
   releaseGroups: ReleaseGroup[];
 }
+
+export interface CoverArtResult {
+  url: string;
+}

@@ -1,8 +1,15 @@
 import { Request, Response, Router } from 'express';
 import { Observable, Subscriber, throwError, timer } from 'rxjs';
-import { map, retryWhen, switchMap, take } from 'rxjs/internal/operators';
-import { ArtistSearchResult, compareByYear, ReleaseGroup, ReleaseGroupsResult, ReleaseType } from '@muslib/shared';
+import {
+  ArtistSearchResult,
+  compareByYear,
+  CoverArtResult,
+  ReleaseGroup,
+  ReleaseGroupsResult,
+  ReleaseType
+} from '@muslib/shared';
 import * as rq from 'request';
+import { map, retryWhen, switchMap, take } from 'rxjs/operators';
 
 export const route = Router();
 
@@ -191,10 +198,10 @@ export class MBApi {
       );
   }
 
-  getCoverArt(type: 'release' | 'release-group', id: string): Observable<string> {
-    function extractImage(data: CoverArtResponse): string {
+  getCoverArt(type: 'release' | 'release-group', id: string): Observable<CoverArtResult> {
+    function extractImage(data: CoverArtResponse): CoverArtResult {
       if (data && Array.isArray(data.images) && data.images.length > 0) {
-        return data.images[0].image;
+        return { url: data.images[0].image };
       }
       throw Error(`Cannot extract cover art from response for ${type} ${id}`);
     }
@@ -225,7 +232,7 @@ function processRequestObservable<T>(req: Request, res: Response, data: Observab
   req.on('close', () => subscription.unsubscribe());
 }
 
-route.get('/search/artist', async (req, res) => {
+route.get('/mb/search/artist', async (req, res) => {
   processRequestObservable(req, res, api.searchArtist(req.query.name));
 });
 

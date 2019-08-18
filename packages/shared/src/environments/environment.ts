@@ -4,11 +4,7 @@
 
 export const sharedEnvironment = {
   server: {
-    host: 'localhost',
-    port: 8080,
-    get url(): string {
-      return `http://${this.host}:${this.port}`;
-    }
+    url: '/api'
   },
   firebase: {
     apiKey: 'AIzaSyAfk3uOTDs94m4Wql1GkAEaoloWMNpY25w',

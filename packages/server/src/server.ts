@@ -5,7 +5,6 @@ import * as path from 'path';
 import * as bodyParser from 'body-parser';
 import { route as uploadRoute } from './routes/upload';
 import { route as mb } from './routes/mb';
-import { sharedEnvironment } from '@muslib/shared';
 import { config, readConfig } from './config';
 
 console.log('Loading env file:', path.resolve(process.cwd(), '.env'));
@@ -23,6 +22,6 @@ app.get('/ping', (req, res) => {
   res.send('pong');
 });
 
-app.listen(sharedEnvironment.server.port, sharedEnvironment.server.host, () => {
+app.listen(config.server.port, config.server.host, () => {
   console.log(`Listening on http://${config.server.host}:${config.server.port}.`);
 });

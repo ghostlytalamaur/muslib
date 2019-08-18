@@ -2,7 +2,6 @@ import * as path from 'path';
 import * as fs from 'fs';
 import * as t from 'io-ts';
 import { either } from 'fp-ts';
-import { sharedEnvironment } from '@muslib/shared';
 import { failure } from 'io-ts/lib/PathReporter';
 
 export interface Config {
@@ -15,8 +14,8 @@ export interface Config {
 
 const defaultConfig: Config = {
   server: {
-    host: sharedEnvironment.server.host,
-    port: sharedEnvironment.server.port
+    host: 'localhost',
+    port: 3000
   },
   allowedOrigin: []
 };

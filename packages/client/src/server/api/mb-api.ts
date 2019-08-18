@@ -1,7 +1,8 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
-import { ArtistSearchResult, ReleaseGroupsResult, sharedEnvironment } from '@muslib/shared';
+import { ArtistSearchResult, CoverArtResult, ReleaseGroupsResult, sharedEnvironment } from '@muslib/shared';
+import { map } from 'rxjs/operators';
 
 
 @Injectable()
@@ -28,6 +29,9 @@ export class MBApi {
     const url = `${sharedEnvironment.server.url}/mb/coverart/release-group`;
     const params = new HttpParams()
       .set('id', id);
-    return this.http.get(url, { params, responseType: 'text' });
+    return this.http.get<CoverArtResult>(url, { params })
+      .pipe(
+        map(data => data.url)
+      );
   }
 }
