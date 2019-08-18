@@ -2,18 +2,18 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ArtistCardComponent } from './artist-card.component';
 import { MatCard, MatCardModule, MatMenuModule } from '@angular/material';
-import { Artist } from '../../models/artist';
-import { of } from 'rxjs';
+import { createArtist } from '../../models/artist';
 import { By } from '@angular/platform-browser';
 import { SharedModule } from '../../shared/shared.module';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { spy, verify } from 'ts-mockito';
+import { createImage, ImageType } from '../../models/image';
 
 describe('ArtistCardComponent', () => {
   let component: ArtistCardComponent;
   let fixture: ComponentFixture<ArtistCardComponent>;
-  const imageUrl = 'assets/album.jpg';
-  const artist = new Artist('artist1', 'Nightwish', of(imageUrl));
+  const image = createImage(ImageType.FireStorage, 'artist1_image', 'assets/album.jpg');
+  const artist = createArtist('artist1', 'Nightwish', image);
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
@@ -52,7 +52,7 @@ describe('ArtistCardComponent', () => {
     const imageEl = fixture.debugElement.query(
       By.css('.artist-image-container > img')
     ).nativeElement as HTMLImageElement;
-    expect(imageEl.src).toContain(imageUrl);
+    expect(imageEl.src).toContain(image);
   });
 
   it('should emit deleteArtist event', () => {

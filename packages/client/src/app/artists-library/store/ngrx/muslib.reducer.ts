@@ -1,15 +1,12 @@
 import { Action, combineReducers, createFeatureSelector, createSelector } from '@ngrx/store';
-
-import { createArtist } from '../../../models/artist';
 import * as fromRoot from '../../../reducers';
 import * as fromAlbums from './albums.reducer';
 import * as fromArtists from './artists.reducer';
 import * as fromImages from './images.reducer';
-import { Album, createAlbum } from '../../../models/album';
 import { Dictionary } from '@ngrx/entity';
-import { AlbumEntity } from '../album.entity';
-import { ArtistEntity } from '../artist.entity';
-import { Image, ImageId } from '../../../models/image';
+import { Album } from '../../../models/album';
+import { Artist } from '../../../models/artist';
+import { ImageId } from '../../../models/image';
 
 export const muslibFeatureKey = 'library';
 
@@ -49,7 +46,7 @@ const selectImagesState = createSelector(
 );
 
 const {
-  selectAll: getArtistsEntities,
+  selectAll: getArtists,
   selectIds: getArtistsIds,
   selectTotal: getTotalArtists,
   selectEntities: getArtistEntitiesMap
@@ -74,86 +71,48 @@ const getArtistEntity = (artistId: string) => createSelector(
   entities => entities[artistId]
 );
 
-const getAlbumsEntitiesByIds = (albumsEntities: Dictionary<AlbumEntity>, ids: string[]) =>
+const getAlbumsEntitiesByIds = (albumsEntities: Dictionary<Album>, ids: string[]) =>
   ids.map(id => albumsEntities[id]);
 
-const getAlbumsEntitiesByArtistId = (albumsEntities: AlbumEntity[], artistId: string) =>
+const getAlbumsEntitiesByArtistId = (albumsEntities: Album[], artistId: string) =>
   albumsEntities.filter(entity => entity.artistId === artistId);
 
-const getArtistAlbumsEntities = (artistId: string) => createSelector(
-  getAlbumsEntities,
-  (albumEntities: AlbumEntity[]) =>
-    getAlbumsEntitiesByArtistId(albumEntities, artistId)
-);
-
-export const getImageIds = createSelector(
-  getArtistsEntities,
+export const collectImageIds = createSelector(
+  getArtists,
   getAlbumsEntities,
   (artistsEntities, albumEntities) => {
     const ids: ImageId[] = [];
     for (const entity of artistsEntities) {
-      if (entity.imageId) {
-        ids.push(entity.imageId);
+      if (entity.image) {
+        ids.push(entity.image);
       }
     }
 
     for (const entity of albumEntities) {
-      if (entity.imageId) {
-        ids.push(entity.imageId);
+      if (entity.image) {
+        ids.push(entity.image);
       }
     }
     return ids;
   }
 );
 
-function getImageUrl(images: Dictionary<Image>, id: string): string {
-  const image = images[id];
-  if (image) {
-    if (image.thumbnails && image.thumbnails.thumb300) {
-      return image.thumbnails.thumb300;
-    } else {
-      return image.url;
-    }
-  }
-  return '';
-}
-
-export const getArtists = createSelector(
-  getArtistsEntities,
-  getImagesEntitiesMap,
-  (artists: ArtistEntity[], images: Dictionary<Image>) =>
-    artists.map(a => createArtist(a.id, a.name, getImageUrl(images, a.imageId.id), a.mbid))
-);
-
 export const getArtist = (artistId: string) => createSelector(
   getArtistEntitiesMap,
-  getImagesEntitiesMap,
-  (artistsMap: Dictionary<ArtistEntity>, images: Dictionary<Image>) => {
-    const artistEntity = artistsMap[artistId];
-    if (!artistEntity) {
-      return undefined;
-    }
-
-    return createArtist(artistEntity.id, artistEntity.name, getImageUrl(images, artistEntity.imageId.id), artistEntity.mbid);
+  (artistsMap: Dictionary<Artist>) => {
+    return artistsMap[artistId];
   }
 );
 
 export const getArtistAlbums = (artistId: string) => createSelector(
-  getArtistAlbumsEntities(artistId),
-  getImagesEntitiesMap,
-  (albums, images) => {
-    const res: Album[] = [];
-    if (albums) {
-      for (const album of albums) {
-        const image = images[album.imageId.id];
-        res.push(createAlbum(album.id, album.title, album.year, image ? image.url : '', artistId));
-      }
-    }
-    return res;
-  }
+  getAlbumsEntities,
+  (albumEntities: Album[]) =>
+    getAlbumsEntitiesByArtistId(albumEntities, artistId)
 );
 
 export const getArtistsLoaded = createSelector(
   selectArtistState,
   state => state.loaded
 );
+
+export { getArtists };

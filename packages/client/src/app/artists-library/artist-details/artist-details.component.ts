@@ -4,14 +4,16 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { filter, map, switchMap, take, takeUntil } from 'rxjs/operators';
 import { ListDialogComponent, ListDialogData, ListDialogResult } from '../../shared/list-dialog/list-dialog.component';
-import { Album } from '../../models/album';
-import { Artist } from '../../models/artist';
 import { NewAlbumData, NewAlbumDialogComponent } from '../new-album-dialog/new-album-dialog.component';
 import { AlbumsService } from '../services/albums.service';
 import { ArtistSearchResult } from '@muslib/shared';
 import { BaseComponent } from '../../shared/BaseComponent';
 import { ArtistsService } from '../services/artists.service';
 import { MuslibApi } from '@muslib/server/api/server-api';
+import { getImageUrlFromMap, ImageId, ImagesMap } from '../../models/image';
+import { Album } from '../../models/album';
+import { ImagesService } from '../services/images.service';
+import { Artist } from '../../models/artist';
 
 @Component({
   selector: 'app-artist-details',
@@ -21,12 +23,14 @@ import { MuslibApi } from '@muslib/server/api/server-api';
 export class ArtistDetailsComponent extends BaseComponent implements OnInit {
   artist$: Observable<Artist | undefined> | undefined;
   albums$: Observable<Album[]> | undefined;
+  images$: Observable<ImagesMap> | undefined;
   favoriteAlbums$: Observable<Album[]> | undefined;
   private artistId: string | null;
 
   constructor(
     private artistsService: ArtistsService,
     private albumsService: AlbumsService,
+    private imgService: ImagesService,
     private route: ActivatedRoute,
     private matDialog: MatDialog,
     private server: MuslibApi
@@ -50,10 +54,12 @@ export class ArtistDetailsComponent extends BaseComponent implements OnInit {
       this.albumsService.loadAlbums(this.artistId);
       this.albums$ = this.albumsService.getAlbums(this.artistId);
       this.favoriteAlbums$ = this.albumsService.getFavoriteAlbums(this.artistId);
+      this.images$ = this.imgService.getImages();
     } else {
       this.artist$ = undefined;
       this.albums$ = undefined;
       this.favoriteAlbums$ = undefined;
+      this.images$ = undefined;
     }
   }
 
@@ -130,5 +136,9 @@ export class ArtistDetailsComponent extends BaseComponent implements OnInit {
         () => {
         }
       );
+  }
+
+  getImage(images: ImagesMap, image: ImageId | undefined): string {
+    return getImageUrlFromMap(images, image);
   }
 }

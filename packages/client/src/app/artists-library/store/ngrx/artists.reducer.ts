@@ -1,15 +1,15 @@
-import { ArtistEntity } from '../artist.entity';
+import { Artist } from '../../../models/artist';
 import { createEntityAdapter, EntityState } from '@ngrx/entity';
 import { createReducer, on } from '@ngrx/store';
 import * as ArtistsActions from './artists.actions';
 
 export const artistFeatureKey = 'artists';
 
-export interface State extends EntityState<ArtistEntity> {
+export interface State extends EntityState<Artist> {
   loaded: boolean;
 }
 
-export const adapter = createEntityAdapter<ArtistEntity>();
+export const adapter = createEntityAdapter<Artist>();
 const initialState: State = adapter.getInitialState({
   loaded: false
 });

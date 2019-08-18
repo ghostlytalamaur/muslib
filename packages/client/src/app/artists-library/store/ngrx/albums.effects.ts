@@ -4,8 +4,8 @@ import * as AlbumsActions from './albums.actions';
 import { catchError, map, mergeMap, switchMap } from 'rxjs/operators';
 import { NEVER, Observable, of } from 'rxjs';
 import { Action, Store } from '@ngrx/store';
-import { MuslibApi } from '../../../../server/api/server-api';
-import { createAlbumEntity } from '../album.entity';
+import { MuslibApi } from '@muslib/server/api/server-api';
+import { createAlbum } from '../../../models/album';
 import * as fromMuslib from './muslib.reducer';
 import { createImageId, ImageType } from '../../../models/image';
 
@@ -37,7 +37,7 @@ export class AlbumsEffects {
                 map(releaseGroups =>
                   releaseGroups.releaseGroups.map(group => {
                     const imageId = createImageId(ImageType.CoverArt, group.id);
-                    return createAlbumEntity(group.id, group.title, group.year, imageId, artistId);
+                    return createAlbum(group.id, group.title, group.year, imageId, artistId);
                   })
                 ),
                 map(albums => AlbumsActions.addAlbums({ artistId, albums })),

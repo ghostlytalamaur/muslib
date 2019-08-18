@@ -5,7 +5,7 @@ import { createEffect } from '@ngrx/effects';
 import * as fromMuslib from './muslib.reducer';
 import * as ImagesActions from './images.actions';
 import { ImageId } from '../../../models/image';
-import { ImagesService } from '../../services/images.service';
+import { ImagesStorage } from '../../services/images-storage.service';
 
 export class ImagesEffects {
 
@@ -17,13 +17,13 @@ export class ImagesEffects {
   );
 
   constructor(
-    private readonly imgService: ImagesService,
+    private readonly imgService: ImagesStorage,
     private readonly store: Store<fromMuslib.State>
   ) {
   }
 
   private getImageIds(): Observable<ImageId[]> {
-    return this.store.select(fromMuslib.getImageIds);
+    return this.store.select(fromMuslib.collectImageIds);
   }
 
   private requestImages(imageIds: ImageId[]): Observable<Action> {

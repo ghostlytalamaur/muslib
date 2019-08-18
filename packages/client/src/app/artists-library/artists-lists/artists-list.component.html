@@ -5,14 +5,19 @@
     </div>
 
     <ng-container *ngIf="artists$ | async as artists">
-      <div class="artists-container">
-        <app-artist-card
-          (deleteArtist)="deleteArtist($event)"
-          *ngFor="let artist of artists; trackBy: trackById"
-          [artist]="artist"
-          [routerLink]="artist.id"
-        ></app-artist-card>
-      </div>
+      <ng-container *ngIf="images$ | async as images">
+
+        <div class="artists-container">
+          <app-artist-card
+            (deleteArtist)="deleteArtist($event)"
+            *ngFor="let artist of artists; trackBy: trackById"
+            [artist]="artist"
+            [image]="images[artist.image?.id]"
+            [routerLink]="artist.id"
+          ></app-artist-card>
+        </div>
+
+      </ng-container>
     </ng-container>
 
   </ng-container>

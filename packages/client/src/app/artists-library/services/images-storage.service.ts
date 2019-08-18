@@ -1,77 +1,46 @@
-import { AngularFireStorage } from '@angular/fire/storage';
+import { merge, NEVER, Observable } from 'rxjs';
+import { createImage, Image, ImageId, ImageType } from '../../models/image';
+import { MuslibApi } from '@muslib/server/api/server-api';
 import { Injectable } from '@angular/core';
-import { createImage, Image, ImageThumbnails, ImageType } from '../../models/image';
-import { AuthService } from '../../auth/auth.service';
-import * as uuid from 'uuid';
-import { FireEntityService } from '../store/ngrx/fire-entity.service';
-import { AngularFirestore } from '@angular/fire/firestore';
-
-interface ImageEntityData {
-  path: string;
-  thumbnails?: ImageThumbnails; // thumbnail size to path
-}
+import { catchError, map } from 'rxjs/operators';
+import { ImagesFireStorage } from './images-fire-storage.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ImagesStorage extends FireEntityService<Image, ImageEntityData> {
+export class ImagesStorage {
 
   constructor(
-    private readonly fireStorage: AngularFireStorage,
-    authService: AuthService,
-    afs: AngularFirestore
+    private storage: ImagesFireStorage,
+    private server: MuslibApi
   ) {
-    super(afs, authService, 'images');
   }
 
-  async uploadImage(image: File | string): Promise<string> {
-    try {
-      const user = this.authService.user;
-      if (user && image instanceof File) {
-        console.log('Uploading image to FireStorage');
-        const uniqueId = uuid.v4();
-        const path = `users/${user.uid}/images/${uniqueId}`;
-        const entityId = await this.addEntity({ path });
-        const imageRef = this.fireStorage.storage.ref(path);
-        const snapshot = await imageRef.put(image, {
-          contentType: image.type,
-          customMetadata: { entity: this.getEntityPath(user.uid, entityId) }
-        });
-
-        const id = snapshot.ref.fullPath;
-        console.log('Image uploaded to FireStorage. id =', id);
-        return entityId;
+  getImages(ids: ImageId[]): Observable<Image[]> {
+    const firebaseIds: string[] = [];
+    const coverArtIds: string[] = [];
+    for (const id of ids) {
+      if (id.type === ImageType.FireStorage) {
+        firebaseIds.push(id.id);
       } else {
-        return '';
+        coverArtIds.push(id.id);
       }
-    } catch (err) {
-      console.log('Error while uploading image.', err);
-      return '';
     }
+
+    return merge(this.storage.getEntities(firebaseIds), this.getCoverArts(coverArtIds));
   }
 
-  protected async createEntity(userId: string, id: string, data: ImageEntityData): Promise<Image> {
-    const promises = [];
-    promises.push(this.getImageUrl(data.path));
-    if (data.thumbnails) {
-      promises.push(this.getImageUrl(data.thumbnails.thumb300));
-    }
-    return Promise.all(promises)
-      .then(([url, thumb300]) => {
-        return createImage(ImageType.FireStorage, id, url, {
-          thumb300
-        });
-      });
-  }
-
-  private getImageUrl(id: string): Promise<string> {
-    console.log('Request image url for image', id);
-    return this.fireStorage.storage
-      .ref(id)
-      .getDownloadURL()
-      .catch(err => {
-        console.log('Cannot get image url for id =', id, err);
-        return '';
-      });
+  private getCoverArts(ids: string[]): Observable<Image[]> {
+    const observables = ids.map(id =>
+      this.server.mb2.coverArt(id)
+        .pipe(
+          map(url => createImage(ImageType.CoverArt, id, url)),
+          catchError(ignored => NEVER)
+        )
+    );
+    return merge(...observables)
+      .pipe(
+        map(image => [image])
+      );
   }
 }

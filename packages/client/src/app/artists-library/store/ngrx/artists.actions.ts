@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { ArtistEntity } from '../artist.entity';
+import { Artist } from '../../../models/artist';
 
 export const loadArtists = createAction(
   '[Artists] Load Artists'
@@ -7,17 +7,17 @@ export const loadArtists = createAction(
 
 export const setArtists = createAction(
   '[Artists] Set Artists',
-  props<{ artists: ArtistEntity[] }>()
+  props<{ artists: Artist[] }>()
 );
 
 export const addArtist = createAction(
   '[Artists] Add Artists',
-  props<{ artists: ArtistEntity }>()
+  props<{ artists: Artist }>()
 );
 
 export const updateArtists = createAction(
   '[Artists] Update Artists',
-  props<{ artists: ArtistEntity[] }>()
+  props<{ artists: Artist[] }>()
 );
 
 export const deleteArtists = createAction(
@@ -27,12 +27,12 @@ export const deleteArtists = createAction(
 
 export const artistsAdded = createAction(
   '[Artists] Artists Added',
-  props<{ artists: ArtistEntity[] }>()
+  props<{ artists: Artist[] }>()
 );
 
 export const artistsModified = createAction(
   '[Artists] Artists Modified',
-  props<{ artists: ArtistEntity[] }>()
+  props<{ artists: Artist[] }>()
 );
 
 export const artistsDeleted = createAction(

@@ -1,4 +1,3 @@
-import { Artist, PartialArtist } from '../../models/artist';
 import { Observable, Subject } from 'rxjs';
 import { ArtistsStorageService } from './artists-storage.service';
 import { Injectable, OnDestroy } from '@angular/core';
@@ -6,6 +5,8 @@ import { Store } from '@ngrx/store';
 import * as fromArtists from '../store/ngrx/artists.reducer';
 import * as fromMuslib from '../store/ngrx/muslib.reducer';
 import * as ArtistsActions from '../store/ngrx/artists.actions';
+import { Artist } from '../../models/artist';
+import { IdHolder } from '../../models/id-holder';
 
 @Injectable()
 export class ArtistsService implements OnDestroy {
@@ -36,7 +37,7 @@ export class ArtistsService implements OnDestroy {
       .catch();
   }
 
-  updateArtist(artist: PartialArtist): void {
+  updateArtist(artist: IdHolder & Partial<Artist>): void {
     this.storageService.updateArtist(artist)
       .catch();
   }

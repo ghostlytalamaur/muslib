@@ -5,8 +5,8 @@
     </mat-card-title>
   </mat-card-header>
   <div class="image-300-container-black" mat-card-image>
-    <ng-container *ngIf="artist.imageUrl">
-      <img [src]="artist.imageUrl" alt="" class="image-300" />
+    <ng-container *ngIf="getImage() as imgUrl">
+      <img [src]="imgUrl" alt="" class="image-300" />
     </ng-container>
   </div>
 </mat-card>

@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { AlbumEntity } from '../album.entity';
+import { Album } from '../../../models/album';
 
 export const loadAlbums = createAction(
   '[Albums] Load Albums',
@@ -13,5 +13,5 @@ export const loadFailed = createAction(
 
 export const addAlbums = createAction(
   '[Albums] Add Albums',
-  props<{ artistId: string; albums: AlbumEntity[] }>()
+  props<{ artistId: string; albums: Album[] }>()
 );
