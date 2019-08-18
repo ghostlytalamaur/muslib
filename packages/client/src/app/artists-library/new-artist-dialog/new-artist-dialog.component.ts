@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material';
-import { MuslibApi } from '../../../server/api/server-api';
+import { MuslibApi } from '@muslib/server/api/server-api';
 import { EMPTY, Observable, Subject } from 'rxjs';
 import { catchError, delay, distinctUntilChanged, map, switchMap } from 'rxjs/operators';
-import { Artist } from 'muslib/shared';
+import { Artist } from '@muslib/shared';
 
 export interface NewArtistData {
   name: string;

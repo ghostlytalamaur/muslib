@@ -2,8 +2,9 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, take } from 'rxjs/operators';
 import { MBApi } from './mb-api';
-import { sharedEnvironment } from 'muslib/shared';
+
 import { AuthService } from '../../app/auth/auth.service';
+import { sharedEnvironment } from '@muslib/shared';
 
 async function readFile(file: File): Promise<ArrayBuffer> {
   return new Promise((resolve, reject) => {

@@ -6,9 +6,9 @@
     /* Redirect output structure to the directory. */
     "outDir": "../dist/@muslib",
     /* Generates corresponding '.d.ts' file. */
-    "declaration": true,
+    "declaration": false,
     /* Generates a sourcemap for each corresponding '.d.ts' file. */
-    "declarationMap": true,
+    "declarationMap": false,
     /* Import emit helpers from 'tslib'. */
     "importHelpers": true,
     /* Enables experimental support for emitting type metadata for decorators. */

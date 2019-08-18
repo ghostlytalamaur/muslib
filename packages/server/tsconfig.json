@@ -11,7 +11,7 @@
       "es2015"
     ],
     "paths": {
-      "muslib/shared": [
+      "@muslib/shared": [
         "../shared"
       ],
       "*": [

@@ -2,10 +2,10 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
-import { MuslibApi } from 'src/server/api/server-api';
 import { AuthService } from '../../auth/auth.service';
 import { IdHolder } from '../../models/id-holder';
 import { StatusService } from '../../services/status.service';
+import { MuslibApi } from '../../../server/api/server-api';
 
 export class BaseService<T, R> {
   constructor(

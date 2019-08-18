@@ -1,21 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
-import { NEVER, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { filter, map, switchMap, take, takeUntil } from 'rxjs/operators';
-import {
-  ListDialogComponent,
-  ListDialogData,
-  ListDialogResult
-} from 'src/app/shared/list-dialog/list-dialog.component';
-import { MuslibApi } from '../../../server/api/server-api';
+import { ListDialogComponent, ListDialogData, ListDialogResult } from '../../shared/list-dialog/list-dialog.component';
 import { Album } from '../../models/album';
 import { Artist } from '../../models/artist';
 import { NewAlbumData, NewAlbumDialogComponent } from '../new-album-dialog/new-album-dialog.component';
 import { AlbumsService } from '../services/albums.service';
-import { ArtistSearchResult } from 'muslib/shared';
+import { ArtistSearchResult } from '@muslib/shared';
 import { BaseComponent } from '../../shared/BaseComponent';
 import { ArtistsService } from '../services/artists.service';
+import { MuslibApi } from '@muslib/server/api/server-api';
 
 @Component({
   selector: 'app-artist-details',

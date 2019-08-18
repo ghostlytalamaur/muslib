@@ -20,7 +20,6 @@ import { ArtistsLibraryRoutingModule } from './artists-library-routing.module';
 import { ArtistsLibraryComponent } from './artists-library/artists-library.component';
 import { ArtistsListComponent } from './artists-lists/artists-list.component';
 import { HttpClientModule } from '@angular/common/http';
-import { MuslibApiModule } from 'src/server/api/muslib-api.module';
 import { NewArtistDialogComponent } from './new-artist-dialog/new-artist-dialog.component';
 import { ArtistDetailsComponent } from './artist-details/artist-details.component';
 import { AlbumListComponent } from './album-list/album-list.component';
@@ -30,6 +29,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { ArtistsEffects } from './store/ngrx/artists.effects';
 import { ImagesEffects } from './store/ngrx/images.effects';
 import { AlbumsEffects } from './store/ngrx/albums.effects';
+import { MuslibApiModule } from '../../server/api/muslib-api.module';
 
 @NgModule({
   declarations: [

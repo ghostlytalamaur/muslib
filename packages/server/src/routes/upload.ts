@@ -1,10 +1,10 @@
-import { Router, Request, Response } from 'express';
+import { Request, Response, Router } from 'express';
 import * as admin from 'firebase-admin';
 import * as fireStorage from '@google-cloud/storage';
 import * as fs from 'fs';
 import * as request from 'request';
 import * as sharp from 'sharp';
-import { sharedEnvironment } from 'muslib/shared';
+import { sharedEnvironment } from '@muslib/shared';
 
 const fireApp = admin.initializeApp({
   storageBucket: sharedEnvironment.firebase.storageBucket

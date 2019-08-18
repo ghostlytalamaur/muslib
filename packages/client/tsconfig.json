@@ -1,7 +1,7 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "baseUrl": ".",
+    "baseUrl": "./",
     "outDir": "../../dist/@muslib/client",
     "typeRoots": [
       "node_modules/@types"
@@ -11,8 +11,10 @@
       "dom"
     ],
     "paths": {
-      "@angular/*": ["../../node_modules/@angular"],
-      "muslib/shared": [
+      "@muslib/server/*": [
+        "./src/server/*"
+      ],
+      "@muslib/shared": [
         "../shared"
       ]
     }

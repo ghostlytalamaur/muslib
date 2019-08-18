@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 import { Injectable } from '@angular/core';
 import { switchMap, take } from 'rxjs/operators';
-import { sharedEnvironment } from 'muslib/shared';
+import { sharedEnvironment } from '@muslib/shared';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
