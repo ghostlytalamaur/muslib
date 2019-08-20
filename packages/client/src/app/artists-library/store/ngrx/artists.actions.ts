@@ -1,5 +1,6 @@
-import { createAction, props } from '@ngrx/store';
+import { createAction, props, union } from '@ngrx/store';
 import { Artist } from '../../../models/artist';
+import { ActionType } from '@ngrx/store/src/models';
 
 export const loadArtists = createAction(
   '[Artists] Load Artists'
@@ -40,7 +41,16 @@ export const artistsDeleted = createAction(
   props<{ ids: string[] }>()
 );
 
+export type ArtistsDeleted = ActionType<typeof artistsDeleted>;
+
 export const setError = createAction(
   '[Artists] Set Error',
   props<{ message: string }>()
 );
+
+const actions = union({
+  artistsModified,
+  artistsDeleted
+});
+
+export type Actions = typeof actions;

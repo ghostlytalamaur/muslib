@@ -2,6 +2,7 @@ import { Artist } from '../../../models/artist';
 import { createEntityAdapter, EntityState } from '@ngrx/entity';
 import { createReducer, on } from '@ngrx/store';
 import * as ArtistsActions from './artists.actions';
+import { ImageId } from '../../../models/image';
 
 export const artistFeatureKey = 'artists';
 
@@ -33,3 +34,28 @@ export const reducer = createReducer(initialState,
   }))
 );
 
+export function getImageIds(state: State, artists: string[]): ImageId[] {
+  const res: ImageId[] = [];
+  for (const id of artists) {
+    const entity = state.entities[id];
+    if (entity && entity.image) {
+      res.push(entity.image);
+    }
+  }
+  return res;
+}
+
+export const {
+  selectAll: getArtists,
+  selectIds: getArtistsIds,
+  selectTotal: getTotalArtists,
+  selectEntities: getArtistEntitiesMap
+} = adapter.getSelectors();
+
+// export function getArtist(state: State, artistId: string): Artist | undefined {
+//   return getArtistEntitiesMap(state)[artistId];
+// }
+
+export function getArtist(state: State, artistId: string): Artist | undefined {
+  return getArtistEntitiesMap(state)[artistId];
+}
