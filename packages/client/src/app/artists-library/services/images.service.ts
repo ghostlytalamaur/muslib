@@ -12,6 +12,6 @@ export class ImagesService {
   ) {}
 
   getImages(): Observable<ImagesMap> {
-    return this.store.select(fromMuslib.getImagesEntitiesMap);
+    return this.store.select(fromMuslib.getImagesMap);
   }
 }

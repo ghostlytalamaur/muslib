@@ -1,11 +1,15 @@
 import { Image, ImageId } from '../../../models/image';
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
-import { createReducer, on } from '@ngrx/store';
+import { createReducer, on, Selector } from '@ngrx/store';
 import * as ImagesActions from './images.actions';
 
 export const imagesFeatureKey = 'images';
 
 export interface State extends EntityState<Image> {
+}
+
+export interface ParentState {
+  [imagesFeatureKey]: State;
 }
 
 export const adapter: EntityAdapter<Image> = createEntityAdapter<Image>();
@@ -19,10 +23,10 @@ export function removeImages(state: State, ids: ImageId[]): State {
   return adapter.removeMany(ids.map(imageId => imageId.id), state);
 }
 
-
+const selectImagesState: Selector<ParentState, State> = parentState => parentState[imagesFeatureKey];
 export const {
-  selectEntities: getImagesEntitiesMap,
+  selectEntities: getImagesMap,
   selectAll: getImages,
   selectTotal: getTotalImages,
   selectIds: getImagesIds
-} = adapter.getSelectors();
+} = adapter.getSelectors(selectImagesState);

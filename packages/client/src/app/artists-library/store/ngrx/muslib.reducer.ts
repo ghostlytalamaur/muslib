@@ -6,7 +6,7 @@ import * as fromImages from './images.reducer';
 import * as ArtistActions from './artists.actions';
 import { Dictionary } from '@ngrx/entity';
 import { Album } from '../../../models/album';
-import { Image, ImageId } from '../../../models/image';
+import { Image, ImageId, ImagesMap } from '../../../models/image';
 import { Artist } from '../../../models/artist';
 
 export const muslibFeatureKey = 'library';
@@ -31,13 +31,13 @@ function combinedReducers(state: MuslibState | undefined, action: Action): Musli
 
 function artistsDeleted(state: MuslibState, action: ArtistActions.ArtistsDeleted): MuslibState {
   const { ids } = action;
-  const artistsImages = fromArtists.getImageIds(getArtistState(state), ids);
-  const albumsImages = fromAlbums.getImageIdsByArtistIds(getAlbumsState(state), ids);
+  const artistsImages = fromArtists.getImageIds(state, ids);
+  const albumsImages = fromAlbums.getImageIdsByArtistIds(state, ids);
   const newState = combinedReducers(state, action);
   const imagesToDelete = artistsImages.concat(albumsImages);
   return {
     ...newState,
-    [fromImages.imagesFeatureKey]: fromImages.removeImages(getImagesState(state), imagesToDelete)
+    [fromImages.imagesFeatureKey]: fromImages.removeImages(state[fromImages.imagesFeatureKey], imagesToDelete)
   };
 }
 
@@ -51,57 +51,32 @@ export function reducer(state: MuslibState, action: ArtistActions.Actions): Musl
 }
 
 const selectMuslibState: Selector<State, MuslibState> = createFeatureSelector<State, MuslibState>(muslibFeatureKey);
-function getArtistState(state: MuslibState): fromArtists.State {
-  return state[fromArtists.artistFeatureKey];
-}
-
-const selectArtistState: Selector<State, fromArtists.State> = compose(
-  getArtistState,
-  selectMuslibState
-);
-
-function getAlbumsState(state: MuslibState): fromAlbums.State {
-  return state[fromAlbums.albumsFeatureKey];
-}
-
-const selectAlbumsState: Selector<State, fromAlbums.State> = compose(
-  getAlbumsState,
-  selectMuslibState
-);
-
-function getImagesState(state: MuslibState): fromImages.State {
-  return state[fromImages.imagesFeatureKey];
-}
-
-const selectImagesState: Selector<State, fromImages.State> = compose(
-  getImagesState,
-  selectMuslibState
-);
 
 export const getArtists: Selector<State, Artist[]> = compose(
   fromArtists.getArtists,
-  selectArtistState
+  selectMuslibState
 );
 
-const getImagesEntitiesMap: Selector<State, Dictionary<Image>> = compose(
-  fromImages.getImagesEntitiesMap,
-  selectImagesState
+export const getImagesMap: Selector<State, ImagesMap> = compose(
+  fromImages.getImagesMap,
+  selectMuslibState
 );
 
-const getAlbumsEntities: Selector<State, Album[]> = compose(
-  fromAlbums.getAlbumsEntities,
-  selectAlbumsState
+const getAlbums: Selector<State, Album[]> = compose(
+  fromAlbums.getAlbums,
+  selectMuslibState
 );
 
 export const collectImageIds: Selector<State, ImageId[]> = createSelector(
   getArtists,
-  getAlbumsEntities,
-  getImagesEntitiesMap,
+  getAlbums,
+  getImagesMap,
   (artistsEntities, albumEntities, images) => {
     const isImageLoaded = (map: Dictionary<Image>, image: ImageId): boolean => {
       const img = map[image.id];
       return !!(img && img.url);
     };
+
     const ids: ImageId[] = [];
     for (const entity of artistsEntities) {
       if (entity.image && !isImageLoaded(images, entity.image)) {
@@ -118,32 +93,17 @@ export const collectImageIds: Selector<State, ImageId[]> = createSelector(
   }
 );
 
-export const getArtist: (artistId: string) => Selector<State, Artist | undefined> = artistId =>
-  createSelector(
-    selectArtistState,
-    state => fromArtists.getArtist(state, artistId)
-  );
-
-export const getArtistAlbums = (artistId: string): Selector<State, Album[]> => createSelector(
-  getAlbumsEntities,
-  albumEntities => fromAlbums.getAlbumsEntitiesByArtistId(albumEntities, artistId)
+export const getArtist = (artistId: string): Selector<State, Artist | undefined> => compose(
+  fromArtists.getArtist(artistId),
+  selectMuslibState
 );
 
-export const getArtistsLoaded: Selector<State, boolean> = createSelector(
-  selectArtistState,
-  state => state.loaded
+export const getArtistAlbums = (artistId: string): Selector<State, Album[]> => compose(
+  fromAlbums.getArtistAlbums(artistId),
+  selectMuslibState
 );
 
-
-const selectMuslibState2 = createFeatureSelector<MuslibState>(muslibFeatureKey);
-
-const selectArtistState2 = createSelector(
-  selectMuslibState2,
-  state => state[fromArtists.artistFeatureKey]
-);
-
-
-export const getArtistsLoaded2 = createSelector(
-  selectArtistState2,
-  state => state.loaded
+export const getArtistsLoaded: Selector<State, boolean> = compose(
+  fromArtists.getArtistsLoaded,
+  selectMuslibState
 );

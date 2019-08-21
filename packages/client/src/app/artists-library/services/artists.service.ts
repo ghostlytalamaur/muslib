@@ -2,7 +2,6 @@ import { Observable, Subject } from 'rxjs';
 import { ArtistsStorageService } from './artists-storage.service';
 import { Injectable, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
-import * as fromArtists from '../store/ngrx/artists.reducer';
 import * as fromMuslib from '../store/ngrx/muslib.reducer';
 import * as ArtistsActions from '../store/ngrx/artists.actions';
 import { Artist } from '../../models/artist';
@@ -14,7 +13,7 @@ export class ArtistsService implements OnDestroy {
 
   constructor(
     private readonly storageService: ArtistsStorageService,
-    private store: Store<fromArtists.State>
+    private store: Store<fromMuslib.State>
   ) {
     this.alive$ = new Subject<void>();
   }
@@ -47,7 +46,7 @@ export class ArtistsService implements OnDestroy {
   }
 
   getIsLoaded(): Observable<boolean> {
-    return this.store.select(fromMuslib.getArtistsLoaded2);
+    return this.store.select(fromMuslib.getArtistsLoaded);
   }
 
   ngOnDestroy(): void {

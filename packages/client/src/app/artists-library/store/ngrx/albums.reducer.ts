@@ -1,6 +1,6 @@
 import { Album } from '../../../models/album';
 import { createEntityAdapter, EntityState } from '@ngrx/entity';
-import { createReducer, on } from '@ngrx/store';
+import { createReducer, createSelector, on, Selector } from '@ngrx/store';
 import * as AlbumsActions from './albums.actions';
 import * as ArtistActions from './artists.actions';
 import { ImageId } from '../../../models/image';
@@ -8,6 +8,10 @@ import { ImageId } from '../../../models/image';
 export const albumsFeatureKey = 'albums';
 
 export interface State extends EntityState<Album> {
+}
+
+interface ParentState {
+  [albumsFeatureKey]: State;
 }
 
 export const adapter = createEntityAdapter<Album>();
@@ -25,25 +29,31 @@ export const reducer = createReducer(initialState,
   })
 );
 
-export function getImageIdsByArtistIds(state: State, artistIds: string[]): ImageId[] {
+const selectAlbumsState: Selector<ParentState, State> = state => state[albumsFeatureKey];
+export const {
+  selectEntities: getAlbumsEntitiesMap,
+  selectAll: getAlbums,
+  selectIds: getAlbumsIds,
+  selectTotal: getTotalAlbums
+} = adapter.getSelectors<ParentState>(selectAlbumsState);
+
+export const getArtistAlbums: (artistId: string) => Selector<ParentState, Album[]> =
+  artistId => createSelector(
+    getAlbums,
+    albums => albums.filter(album => album.artistId === artistId)
+  );
+
+export function getImageIdsByArtistIds(parentState: ParentState, artistIds: string[]): ImageId[] {
+  return collectImageIdsByArtistIds(getAlbums(parentState), artistIds);
+}
+
+function collectImageIdsByArtistIds(albums: Album[], artistIds: string[]): ImageId[] {
   const artistIdsSet: Set<string> = new Set(artistIds);
   const res: ImageId[] = [];
-  for (const albumId of state.ids) {
-    const album = state.entities[albumId];
+  for (const album of albums) {
     if (album && album.image && artistIdsSet.has(album.artistId)) {
       res.push(album.image);
     }
   }
   return res;
 }
-
-export const getAlbumsEntitiesByArtistId = (albumsEntities: Album[], artistId: string) =>
-  albumsEntities.filter(entity => entity.artistId === artistId);
-
-
-export const {
-  selectEntities: getAlbumsEntitiesMap,
-  selectAll: getAlbumsEntities,
-  selectIds: getAlbumsIds,
-  selectTotal: getTotalAlbums
-} = adapter.getSelectors();
